@@ -4,8 +4,6 @@
 Plataforma e-commerce sustentable con cálculo de huella de carbono por producto y dashboard de impacto ambiental.
 Participantes: Tomy (Front-end), Facundo (Front-end), Ezequiel (Front-end), Santiago (UX-UI), Brian (Back-End) y Javiera (Back-end) 
 
----
-
 ## **1. Herramientas de Organización y Comunicación**
 
 - 🗣️ **Canal oficial:** WhatsApp (grupo activo del equipo).
