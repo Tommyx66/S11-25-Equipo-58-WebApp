@@ -10,7 +10,7 @@ E-commerce sostenible con métricas de impacto ambiental - Backend API
 
 ## Configuración Inicial
 
-### Opción 1: Usando Docker Compose (Recomendado)
+### Opción 1: Usando Docker Compose (Recomendado y usado por mi Javi)
 
 1. Iniciar PostgreSQL con Docker Compose:
 
@@ -42,8 +42,6 @@ Copiar el archivo `.env.example` a `.env` y configurar las variables:
 # En Windows (PowerShell)
 Copy-Item .env.example .env
 
-# En Linux/Mac
-cp .env.example .env
 ```
 
 Editar el archivo `.env` con tus credenciales de PostgreSQL:
@@ -89,16 +87,6 @@ SPRING_PROFILES_ACTIVE=dev
 mvn spring-boot:run
 ```
 
-O usar Maven Wrapper:
-
-```bash
-# Windows
-.\mvnw.cmd spring-boot:run
-
-# Linux/Mac
-./mvnw spring-boot:run
-```
-
 La aplicación estará disponible en: `http://localhost:8080`
 
 ### Compilar
@@ -107,31 +95,6 @@ La aplicación estará disponible en: `http://localhost:8080`
 mvn clean install
 ```
 
-O con Maven Wrapper:
-
-```bash
-# Windows
-.\mvnw.cmd clean install
-
-# Linux/Mac
-./mvnw clean install
-```
-
-### Ejecutar Tests
-
-```bash
-mvn test
-```
-
-O con Maven Wrapper:
-
-```bash
-# Windows
-.\mvnw.cmd test
-
-# Linux/Mac
-./mvnw test
-```
 
 ## Endpoints Disponibles
 
@@ -145,7 +108,51 @@ O con Maven Wrapper:
 - **PUT** `/api/v1/products/{id}` - Actualizar producto
 - **DELETE** `/api/v1/products/{id}` - Eliminar producto
 
-## Ejemplo de Request
+### Certificaciones
+- **GET** `/api/v1/certifications` - Obtener todas las certificaciones
+- **GET** `/api/v1/certifications/{id}` - Obtener certificación por ID
+- **GET** `/api/v1/certifications/code/{code}` - Obtener certificación por código
+- **POST** `/api/v1/certifications` - Crear nueva certificación
+- **PUT** `/api/v1/certifications/{id}` - Actualizar certificación
+- **DELETE** `/api/v1/certifications/{id}` - Eliminar certificación
+
+## Ejemplos de Uso
+
+### Contrato de la API - Certificaciones
+
+**IMPORTANTE:** El sistema maneja certificaciones de forma diferente según el tipo de operación:
+
+- **GET (ProductResponse)**: Devuelve **nombres** de certificaciones para mejorar nuestra conexión con el front (ej: `["Fair Trade", "Carbon Neutral"]`)
+- **POST/PUT (ProductDto)**: Espera **códigos** de certificaciones (ej: `["FAIR_TRADE", "CARBON_NEUTRAL"]`)
+
+Los códigos deben existir previamente en la base de datos. Si un código no existe, se retornará un error 400 Bad Request, por lo que se acenseja antes de probar, subir un par de post.
+
+### Crear Certificación
+
+```json
+POST /api/v1/certifications
+Content-Type: application/json
+
+{
+  "name": "Fair Trade",
+  "code": "FAIR_TRADE",
+  "type": "SOCIAL",
+  "logoUrl": "https://example.com/fair-trade.png"
+}
+```
+
+**Respuesta:**
+```json
+{
+  "id": 1,
+  "name": "Fair Trade",
+  "code": "FAIR_TRADE",
+  "type": "SOCIAL",
+  "logoUrl": "https://example.com/fair-trade.png",
+  "createdAt": "2024-01-15T10:30:00",
+  "updatedAt": "2024-01-15T10:30:00"
+}
+```
 
 ### Crear Producto
 
@@ -158,17 +165,16 @@ Content-Type: application/json
   "marca": "EcoLife",
   "precio": 14990,
   "impactoAmbiental": {
-    "huellaCarbono": "0.8kg CO₂",
+    "huellaCarbono": "0.8",
     "materialesReciclables": true,
     "nivel": "Bajo impacto ambiental"
   },
-  "imagen": "url-del-producto",
-  "certificaciones": ["Fair Trade", "Carbon Neutral"]
+  "imagen": "https://example.com/bottle.png",
+  "certificaciones": ["FAIR_TRADE", "CARBON_NEUTRAL"]
 }
 ```
 
-### Respuesta
-
+**Respuesta (POST/PUT devuelve códigos):**
 ```json
 {
   "id": 1,
@@ -176,12 +182,92 @@ Content-Type: application/json
   "marca": "EcoLife",
   "precio": 14990,
   "impactoAmbiental": {
-    "huellaCarbono": "0.8kg CO₂",
+    "huellaCarbono": "0.8 kg CO₂",
     "materialesReciclables": true,
     "nivel": "Bajo impacto ambiental"
   },
-  "imagen": "url-del-producto",
-  "certificaciones": ["Fair Trade", "Carbon Neutral"]
+  "imagen": "https://example.com/bottle.png",
+  "certificaciones": ["FAIR_TRADE", "CARBON_NEUTRAL"],
+  "fechaCreacion": "2024-01-15T10:30:00"
+}
+```
+
+### Obtener Producto (GET)
+
+```json
+GET /api/v1/products/1
+```
+
+**Respuesta (GET devuelve nombres):**
+```json
+{
+  "id": 1,
+  "nombre": "Botella reutilizable EcoLife",
+  "marca": "EcoLife",
+  "precio": 14990,
+  "impactoAmbiental": {
+    "huellaCarbono": "0.8 kg CO₂",
+    "materialesReciclables": true,
+    "nivel": "Bajo impacto ambiental"
+  },
+  "imagen": "https://example.com/bottle.png",
+  "certificaciones": ["Fair Trade", "Carbon Neutral"],
+  "fechaCreacion": "2024-01-15T10:30:00"
+}
+```
+
+## Características Principales
+
+### Módulo de Productos
+- CRUD completo de productos
+- Relación many-to-many con certificaciones
+- Impacto ambiental embebido en la entidad Product
+- Validaciones de negocio (precio, nombre, etc.)
+- Manejo de fechas de creación automático
+
+### Módulo de Certificaciones
+- CRUD completo de certificaciones
+- Códigos únicos normalizados (mayúsculas, sin espacios)
+- Validación de unicidad de códigos
+- Búsqueda case-insensitive
+- Fechas de creación y actualización automáticas
+
+### Relaciones
+- **Product ↔ Certification**: Relación many-to-many bidireccional
+- Tabla intermedia: `producto_certificaciones`
+- Carga lazy (importante porque ya dio problema de busqueda infinita si se pone eager) con `@EntityGraph` para optimizar consultas
+
+## Validaciones
+
+### ProductDto
+- `nombre`: Obligatorio, máximo 200 caracteres
+- `precio`: Obligatorio, mayor a 0, máximo 8 dígitos enteros y 2 decimales
+- `marca`: Opcional, máximo 100 caracteres
+- `imagen`: Opcional, máximo 500 caracteres
+- `certificaciones`: Lista de códigos (deben existir en BD)
+
+### CertificationRequest
+- `name`: Obligatorio, máximo 200 caracteres
+- `code`: Obligatorio, máximo 50 caracteres, único
+- `type`: Opcional, máximo 50 caracteres
+- `logoUrl`: Opcional, máximo 500 caracteres
+
+## Manejo de Errores
+
+El sistema incluye un `GlobalExceptionHandler` que maneja lo basico:
+
+- **400 Bad Request**: Validaciones de negocio (ej: certificación no encontrada, código duplicado)
+- **404 Not Found**: Recurso no encontrado (ej: producto o certificación inexistente)
+- **400 Validation Failed**: Errores de validación de campos (Bean Validation)
+- **500 Internal Server Error**: Errores inesperados del servidor
+
+Ejemplo de respuesta de error:
+```json
+{
+  "timestamp": "2024-01-15T10:30:00",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Certificación con código 'INVALID_CODE' no encontrada"
 }
 ```
 
@@ -197,107 +283,52 @@ Content-Type: application/json
 src/main/java/com/ecoshop/
 ├── config/          # Configuraciones (Security, Web)
 ├── controller/      # Controladores REST
+│   ├── ProductController.java
+│   ├── CertificationController.java
+│   └── HealthController.java
 ├── domain/          # Entidades JPA
+│   ├── Product.java
+│   ├── Certification.java
+│   └── ImpactoAmbiental.java
 ├── dto/             # Data Transfer Objects
+│   ├── ProductDto.java
+│   ├── ProductResponse.java
+│   ├── CertificationRequest.java
+│   ├── CertificationResponse.java
+│   └── ImpactoAmbientalResponse.java
 ├── exception/       # Manejo de excepciones
+│   ├── BadRequestException.java
+│   └── GlobalExceptionHandler.java
 ├── mapper/          # Mappers entre DTOs y Entidades
+│   ├── ProductMapper.java
+│   └── CertificationMapper.java
 ├── repository/      # Repositorios JPA
+│   ├── ProductRepository.java
+│   └── CertificationRepository.java
 └── service/         # Lógica de negocio
+    ├── ProductService.java
+    ├── CertificationService.java
+    └── impl/
+        ├── ProductServiceImpl.java
+        └── CertificationServiceImpl.java
 ```
 
 ## Base de Datos
 
-Las tablas se crean automáticamente mediante JPA con `ddl-auto: update`. En producción, usar `ddl-auto: validate` o migraciones con Flyway/Liquibase.
+### Tablas Principales
+- `products`: Productos con impacto ambiental embebido
+- `certifications`: Certificaciones ambientales
+- `producto_certificaciones`: Tabla intermedia para relación many-to-many
 
-## Deploy en Render
+### Configuración
+- Las tablas se crean automáticamente mediante JPA con `ddl-auto: update`
+- En producción, usar `ddl-auto: validate` o migraciones con Flyway/Liquibase
+- PostgreSQL 14+ recomendado
 
-Este proyecto está configurado para desplegarse fácilmente en Render usando el archivo `render.yaml`.
-
-### Prerrequisitos
-
-1. Tener una cuenta en [Render](https://render.com) (gratuita)
-2. Tener el proyecto en un repositorio Git (GitHub, GitLab o Bitbucket)
-
-### Pasos para el Deploy
-
-#### 1. Preparar el Repositorio
-
-Asegúrate de que todos los cambios estén commiteados y pusheados a tu repositorio:
-
-```bash
-git add .
-git commit -m "Configuración para deploy en Render"
-git push origin main
-```
-
-#### 2. Conectar el Repositorio en Render
-
-1. Inicia sesión en [Render Dashboard](https://dashboard.render.com)
-2. Haz clic en **"New +"** y selecciona **"Blueprint"**
-3. Conecta tu repositorio de Git
-4. Render detectará automáticamente el archivo `render.yaml` y configurará:
-   - Un **Web Service** para el backend Spring Boot
-   - Una **Base de datos PostgreSQL**
-
-#### 3. Configuración Automática
-
-El archivo `render.yaml` ya está configurado con:
-- **Build Command**: `./mvnw clean install -DskipTests`
-- **Start Command**: `java -jar target/ecoshop-0.0.1-SNAPSHOT.jar`
-- **Variables de entorno**: Configuradas automáticamente
-- **Perfil de Spring**: `prod` (producción)
-
-#### 4. Variables de Entorno (Opcional)
-
-Si necesitas ajustar alguna configuración, puedes hacerlo desde el Dashboard de Render:
-- Ve a tu servicio web
-- Selecciona **"Environment"**
-- Agrega o modifica variables según sea necesario
-
-#### 5. Esperar el Deploy
-
-Render construirá y desplegará tu aplicación automáticamente. El proceso puede tardar 5-10 minutos la primera vez.
-
-### URL de la API
-
-Una vez desplegado, Render te proporcionará una URL como:
-```
-https://ecoshop-backend.onrender.com
-```
-
-**Importante**: 
-- La URL base será algo como `https://tu-servicio.onrender.com`
-- Los endpoints estarán disponibles en: `https://tu-servicio.onrender.com/api/v1/...`
-- Ejemplo: `https://tu-servicio.onrender.com/api/v1/health`
-
-### Configuración del Frontend
-
-Para que el frontend pueda consumir el backend:
-
-1. **Obtén la URL de tu backend** desde el Dashboard de Render
-2. **Actualiza la configuración del frontend** para usar esta URL en lugar de `localhost:3000`
-3. **CORS ya está configurado** para permitir solicitudes desde cualquier origen (puedes restringirlo después si es necesario)
-
-### Notas Importantes
-
-- **Plan Gratuito**: Render ofrece un plan gratuito, pero el servicio se "duerme" después de 15 minutos de inactividad. La primera petición después de dormir puede tardar ~30 segundos en responder.
-- **Base de Datos**: La base de datos PostgreSQL se crea automáticamente y las tablas se generan con `ddl-auto: update` al iniciar la aplicación.
-- **Logs**: Puedes ver los logs en tiempo real desde el Dashboard de Render.
-- **Puerto**: Render asigna automáticamente el puerto usando la variable `PORT`, que ya está configurada en el proyecto.
-
-### Solución de Problemas
-
-#### El servicio no inicia
-- Revisa los logs en el Dashboard de Render
-- Verifica que todas las variables de entorno estén configuradas correctamente
-- Asegúrate de que el build se complete sin errores
-
-#### Error de conexión a la base de datos
-- Verifica que la base de datos esté creada y en estado "Available"
-- Revisa que las variables `DB_URL`, `DB_USERNAME` y `DB_PASSWORD` estén configuradas
-
-#### CORS errors en el frontend
-- Verifica que la URL del backend sea correcta
-- Revisa la configuración de CORS en `SecurityConfig.java` si necesitas restringir orígenes específicos
+### Características
+- Códigos de certificaciones normalizados a mayúsculas
+- Búsquedas case-insensitive para códigos
+- Fechas de creación y actualización automáticas
+- Relaciones lazy con carga optimizada mediante `@EntityGraph`
 
 

@@ -27,7 +27,7 @@ import java.util.List;
  * - CSRF deshabilitado: Para APIs REST no es necesario (usar tokens JWT en producción)
  * - CORS habilitado: Permite solicitudes desde diferentes orígenes
  * - Sesiones stateless: No se mantiene estado de sesión (típico para APIs REST)
- * - Endpoints públicos: /api/v1/health y /api/v1/products/** no requieren autenticación
+ * - Endpoints públicos: /api/v1/health, /api/v1/products/** y /api/v1/certifications/** no requieren autenticación
  * 
  * IMPORTANTE para producción:
  * - Configurar dominios específicos en CORS (no usar "*")
@@ -54,10 +54,11 @@ public class SecurityConfig {
      * 3. Sesiones stateless: No se mantiene estado de sesión entre solicitudes
      *    (típico para APIs REST, cada solicitud es independiente)
      * 
-     * 4. Autorización de endpoints:
-     *    - /api/v1/health: Público (permite acceso sin autenticación)
-     *    - /api/v1/products/**: Público (permite acceso sin autenticación)
-     *    - Cualquier otra ruta: Requiere autenticación (aunque actualmente no hay autenticación configurada)
+ * 4. Autorización de endpoints:
+ *    - /api/v1/health: Público (permite acceso sin autenticación)
+ *    - /api/v1/products/**: Público (permite acceso sin autenticación)
+ *    - /api/v1/certifications/**: Público (permite acceso sin autenticación)
+ *    - Cualquier otra ruta: Requiere autenticación (aunque actualmente no hay autenticación configurada)
      * 
      * @param http Objeto HttpSecurity para configurar la seguridad
      * @return SecurityFilterChain configurado
@@ -81,7 +82,7 @@ public class SecurityConfig {
                 // Configura la autorización de endpoints
                 .authorizeHttpRequests(auth -> auth
                         // Estos endpoints son públicos (no requieren autenticación)
-                        .requestMatchers("/api/v1/health", "/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/v1/health", "/api/v1/products/**", "/api/v1/certifications/**").permitAll()
                         // Cualquier otra solicitud requiere autenticación
                         // (actualmente no hay autenticación configurada, así que esto no tiene efecto)
                         .anyRequest().authenticated()
