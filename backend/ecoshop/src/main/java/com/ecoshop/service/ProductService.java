@@ -1,6 +1,7 @@
 package com.ecoshop.service;
 
 import com.ecoshop.dto.ProductDto;
+import com.ecoshop.dto.ProductResponse;
 
 import java.util.List;
 
@@ -21,18 +22,18 @@ public interface ProductService {
     /**
      * Obtiene todos los productos existentes.
      * 
-     * @return Lista de todos los productos convertidos a DTOs
+     * @return Lista de todos los productos convertidos a ProductResponse
      */
-    List<ProductDto> findAll();
+    List<ProductResponse> findAll();
     
     /**
      * Busca un producto por su ID.
      * 
      * @param id Identificador único del producto
-     * @return Producto encontrado convertido a DTO
+     * @return Producto encontrado convertido a ProductResponse
      * @throws jakarta.persistence.EntityNotFoundException si el producto no existe
      */
-    ProductDto findById(Long id);
+    ProductResponse findById(Long id);
     
     /**
      * Guarda un nuevo producto en la base de datos.

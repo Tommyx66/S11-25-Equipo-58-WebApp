@@ -27,8 +27,9 @@ import java.util.Map;
  * 
  * Excepciones manejadas:
  * 1. EntityNotFoundException: Cuando no se encuentra un recurso (404)
- * 2. MethodArgumentNotValidException: Cuando falla la validación de datos (400)
- * 3. Exception: Cualquier otra excepción no manejada (500)
+ * 2. BadRequestException: Cuando se viola una regla de negocio (400)
+ * 3. MethodArgumentNotValidException: Cuando falla la validación de datos (400)
+ * 4. Exception: Cualquier otra excepción no manejada (500)
  * 
  * @RestControllerAdvice: Esta anotación hace que esta clase capture excepciones
  * de todos los controladores REST de la aplicación.
@@ -64,6 +65,36 @@ public class GlobalExceptionHandler {
                 .build();
         // Retorna la respuesta con código HTTP 404
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    /**
+     * Maneja excepciones cuando se produce un error de validación de negocio.
+     * 
+     * Esta excepción se lanza cuando se viola una regla de negocio o se intenta
+     * realizar una operación con datos inválidos (ej: certificación no encontrada).
+     * 
+     * Ejemplo de uso:
+     * - POST /api/v1/products con código de certificación que no existe
+     * - PUT /api/v1/products/1 con código de certificación inválido
+     * 
+     * Respuesta HTTP:
+     * - Código: 400 (Bad Request)
+     * - Body: { "timestamp": "...", "status": 400, "error": "Bad Request", "message": "..." }
+     * 
+     * @param ex Excepción BadRequestException
+     * @return ResponseEntity con el error y código HTTP 400
+     */
+    @ExceptionHandler(BadRequestException.class) // Maneja excepciones de validación de negocio
+    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
+        // Construye la respuesta de error con la información de la excepción
+        ErrorResponse error = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now()) // Hora actual del error
+                .status(HttpStatus.BAD_REQUEST.value()) // Código HTTP 400
+                .error("Bad Request") // Tipo de error
+                .message(ex.getMessage()) // Mensaje de la excepción
+                .build();
+        // Retorna la respuesta con código HTTP 400
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     /**
@@ -139,7 +170,7 @@ public class GlobalExceptionHandler {
      *     "message": "Ha ocurrido un error inesperado"
      *   }
      * 
-     * NOTA: En producción, no expondremos los errores eso si, es solo para desarrollo.
+     * NOTA: En producción, no expondremos los detalles de los errores por seguridad.
      * 
      * @param ex Excepción genérica
      * @return ResponseEntity con el error y código HTTP 500
