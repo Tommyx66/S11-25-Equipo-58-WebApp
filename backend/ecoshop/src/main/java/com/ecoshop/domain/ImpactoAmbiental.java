@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
  * - Los campos se almacenan en la misma tabla que Product
  * 
  * Campos en la base de datos (tabla products):
- * - huella_carbono: Huella de carbono del producto (ej: "0.8kg CO₂")
+ * - huella_carbono_kg: Huella de carbono del producto en kg CO₂ (ej: 0.8, 1.2)
  * - materiales_reciclables: Indica si los materiales son reciclables (true/false)
  * - nivel: Nivel de impacto ambiental (ej: "Bajo impacto ambiental")
  * 
@@ -35,13 +35,14 @@ import lombok.NoArgsConstructor;
 public class ImpactoAmbiental {
 
     /**
-     * Huella de carbono del producto.
+     * Huella de carbono del producto en kilogramos de CO₂.
      * 
      * Representa la cantidad de emisiones de CO₂ asociadas al producto.
-     * Ejemplos: "0.8kg CO₂", "1.2kg CO₂", etc.
+     * Almacenado como valor numérico Double para permitir cálculos y comparaciones.
+     * Ejemplos: 0.8, 1.2, 2.5, etc.
      */
-    @Column(name = "huella_carbono", length = 50) // Nombre de columna en BD, máximo 50 caracteres
-    private String huellaCarbono;
+    @Column(name = "huella_carbono_kg") // Nombre de columna en BD
+    private Double huellaCarbonoKg;
 
     /**
      * Indica si los materiales del producto son reciclables.

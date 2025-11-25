@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -111,12 +112,31 @@ public class ProductDto {
     private String imagen;
 
     /**
-     * Lista de certificaciones del producto.
+     * Lista de códigos de certificaciones del producto.
      * 
-     * Campo opcional que contiene una lista de certificaciones (ej: ["Fair Trade", "Carbon Neutral"]).
-     * No tiene validaciones, puede ser null o una lista vacía.
+     * Campo opcional que contiene una lista de códigos de certificaciones.
+     * Estos códigos representan los identificadores únicos de las certificaciones
+     * (ej: ["FAIR_TRADE", "CARBON_NEUTRAL"]).
+     * 
+     * IMPORTANTE: Este campo contiene los CODES de las certificaciones, no los nombres.
+     * Los códigos deben existir en la base de datos. Si algún código no existe,
+     * se lanzará una excepción BadRequestException (400 Bad Request).
+     * 
+     * No tiene validaciones de formato, puede ser null o una lista vacía.
+     * La validación de existencia se realiza en el servicio.
      */
     private List<String> certificaciones;
+
+    /**
+     * Fecha de creación del producto.
+     * 
+     * Este campo se asigna automáticamente cuando se crea el producto.
+     * Se incluye en las respuestas POST y PUT para que el cliente pueda
+     * conocer cuándo fue creado el producto.
+     * 
+     * No se valida ni se usa como entrada en las peticiones de creación/actualización.
+     */
+    private LocalDateTime fechaCreacion;
 
     /**
      * DTO interno para el impacto ambiental del producto.

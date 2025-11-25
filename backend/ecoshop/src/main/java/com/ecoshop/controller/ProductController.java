@@ -1,6 +1,7 @@
 package com.ecoshop.controller;
 
 import com.ecoshop.dto.ProductDto;
+import com.ecoshop.dto.ProductResponse;
 import com.ecoshop.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,15 +35,15 @@ public class ProductController {
     /**
      * Obtiene todos los productos existentes en la base de datos.
      * 
-     * @return ResponseEntity con la lista de productos y código HTTP 200 (OK)
+     * @return ResponseEntity con la lista de productos (ProductResponse) y código HTTP 200 (OK)
      * 
      * Ejemplo de uso:
      * GET http://localhost:8080/api/v1/products
      */
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
         // Delegamos la lógica al servicio para mantener separación de responsabilidades
-        List<ProductDto> products = productService.findAll();
+        List<ProductResponse> products = productService.findAll();
         return ResponseEntity.ok(products); // Retorna código HTTP 200 con la lista de productos
     }
 
@@ -50,16 +51,16 @@ public class ProductController {
      * Obtiene un producto específico por su ID.
      * 
      * @param id Identificador único del producto
-     * @return ResponseEntity con el producto encontrado y código HTTP 200 (OK)
+     * @return ResponseEntity con el producto encontrado (ProductResponse) y código HTTP 200 (OK)
      * @throws jakarta.persistence.EntityNotFoundException si el producto no existe
      * 
      * Ejemplo de uso:
      * GET http://localhost:8080/api/v1/products/1
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         // @PathVariable extrae el valor del ID desde la URL
-        ProductDto product = productService.findById(id);
+        ProductResponse product = productService.findById(id);
         return ResponseEntity.ok(product);
     }
 

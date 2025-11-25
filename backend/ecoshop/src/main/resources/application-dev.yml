@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/ecoshop  # Puerto 5433 para evitar conflicto con PostgreSQL local
-    username: postgres
-    password: postgres
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/ecoshop}  # Puerto 5433 (mapeo Docker: 5433:5432)
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}  # Usa la variable de entorno DB_PASSWORD o actualiza aquí
   jpa:
     hibernate:
       ddl-auto: update
