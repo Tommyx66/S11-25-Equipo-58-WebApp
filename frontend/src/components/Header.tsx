@@ -19,10 +19,12 @@ export default function Header() {
   
   const { theme, setTheme } = useTheme()
 
+  // Links con IDs y sección Certificaciones
   const navItems: NavItem[] = [
-    { label: 'Productos', href: '#' },
-    { label: 'Nuestro impacto', href: '#' },
-    { label: 'Aprende', href: '#' },
+    { label: 'Productos', href: '/#productos' },
+    { label: 'Aprende', href: '/#aprende' },
+    { label: 'Nuestro impacto', href: '/#impacto' },
+    { label: 'Certificaciones', href: '/#certificaciones' },
   ]
 
   useEffect(() => {
@@ -51,8 +53,8 @@ export default function Header() {
         {/* ================= DESKTOP NAV ================= */}
         <nav className="hidden md:flex items-center h-full w-full px-10 max-w-7xl mx-auto">
           
-          {/* LOGO */}
-          <Link href="/" className="flex-shrink-0 mr-20 hover:opacity-90 transition">
+          {/* LOGO: Lleva al inicio */}
+          <Link href="/#inicio" className="flex-shrink-0 mr-12 lg:mr-20 hover:opacity-90 transition">
             <Image
               src="/logo.png"
               alt="eco SHOP"
@@ -65,12 +67,12 @@ export default function Header() {
 
           {/* NAV LINKS */}
           <div className="flex-1 flex justify-center">
-            <div className="flex items-center gap-8 lg:gap-12">
+            <div className="flex items-center gap-6 lg:gap-10">
               {navItems.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="font-righteous text-lg text-gray-900 dark:text-white 
+                  className="font-righteous text-base lg:text-lg text-gray-900 dark:text-white 
                   relative group transition-all whitespace-nowrap"
                 >
                   <span className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
@@ -86,10 +88,11 @@ export default function Header() {
           </div>
 
           {/* ICONOS + LOGIN */}
-          <div className="flex items-center gap-4 lg:gap-5">
+          <div className="flex items-center gap-3 lg:gap-5 ml-4">
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-black/90 hover:bg-black/5 dark:hover:bg-white/10 transition"
+              aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
             </button>
@@ -112,14 +115,14 @@ export default function Header() {
 
         {/* ================= MOBILE NAV ================= */}
         <nav className="md:hidden flex items-center justify-between h-full w-full px-4 sm:px-6">
-          <Link href="/" className="hover:opacity-90 transition">
+          <Link href="/#inicio" className="hover:opacity-90 transition">
             <Image 
               src="/logo.png" 
               alt="eco SHOP" 
               width={110} 
               height={55} 
               priority 
-              className="w-24 sm:w-28 object-contain" // Ajuste de tamaño para móviles
+              className="w-24 sm:w-28 object-contain"
             />
           </Link>
 
@@ -139,7 +142,6 @@ export default function Header() {
       </header>
 
       {/* ================= MOBILE MENU OVERLAY ================= */}
-      {/* Movemos esto fuera del <header> visualmente usando fixed z-50 para que cubra todo */}
       <div
         className={clsx(
           "fixed inset-0 z-50 bg-black/40 dark:bg-black/60 backdrop-blur-sm md:hidden transition-opacity duration-300",
