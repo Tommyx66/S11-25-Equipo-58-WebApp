@@ -19,7 +19,7 @@ export default function Header() {
   
   const { theme, setTheme } = useTheme()
 
-  // 🟢 ACTUALIZADO: Orden y IDs según tu imagen de referencia
+  // Links con IDs y sección Certificaciones
   const navItems: NavItem[] = [
     { label: 'Productos', href: '/#productos' },
     { label: 'Aprende', href: '/#aprende' },
@@ -53,7 +53,7 @@ export default function Header() {
         {/* ================= DESKTOP NAV ================= */}
         <nav className="hidden md:flex items-center h-full w-full px-10 max-w-7xl mx-auto">
           
-          {/* LOGO: Lleva al inicio de la landing */}
+          {/* LOGO: Lleva al inicio */}
           <Link href="/#inicio" className="flex-shrink-0 mr-12 lg:mr-20 hover:opacity-90 transition">
             <Image
               src="/logo.png"
@@ -174,7 +174,7 @@ export default function Header() {
             <Link
               key={item.label}
               href={item.href}
-              onClick={() => setIsMenuOpen(false)} // UX: Cerrar menú al hacer clic
+              onClick={() => setIsMenuOpen(false)}
               className="font-righteous text-2xl text-gray-900 dark:text-white 
               hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
