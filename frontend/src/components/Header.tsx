@@ -53,6 +53,7 @@ export default function Header() {
         {/* ================= DESKTOP NAV ================= */}
         <nav className="hidden md:flex items-center h-full w-full px-10 max-w-7xl mx-auto">
           
+
           <Link href="/#inicio" className="flex-shrink-0 mr-12 lg:mr-20 hover:opacity-90 transition">
             <Image
               src="/logo.png"

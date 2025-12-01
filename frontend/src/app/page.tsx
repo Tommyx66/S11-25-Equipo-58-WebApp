@@ -4,6 +4,7 @@ import { ProductFilters } from '@/components/ProductFilters'
 import { ProductList } from '@/components/ProductList'
 import HuellaSection from '@/components/HuellaSection'
 import { LowImpactCarousel } from '@/components/LowImpactCarousel'
+import { SustainabilityMetrics } from '@/components/SustainabilityMetrics'
 
 
 export default function Home() {
@@ -26,15 +27,18 @@ export default function Home() {
            <ProductList />
         </section>
 
-        {/* === SECCIÓN IMPACTO === */}
-        <section id="impacto" className="scroll-mt-24">
+        {/* === SECCIÓN APRENDE === */}
+        <section id="aprende" className="scroll-mt-24">
            <HuellaSection />
         </section>
 
-        {/* === SECCIÓN APRENDE */}
+        {/* === SECCIÓN IMPACTO */}
         
-        <section id="aprende" className="scroll-mt-24">
+        <section id="impacto" className="scroll-mt-24">
+          <SustainabilityMetrics />
         </section>
+
+
         
       </div>
     </main>
