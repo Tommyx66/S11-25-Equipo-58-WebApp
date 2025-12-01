@@ -4,10 +4,10 @@ import Image from "next/image";
 
 export default function HuellaSection() {
   return (
-    <div className="min-h-screen mx-auto     p-6 md:p-12">
-      <div className="mx-auto w-fit  ">
-        <div className="  mb-12 flex flex-row gap-10">
-          <div className=" flex items-start pt-4 gap-2 ">
+    <div className="min-h-screen mx-auto    p-6 md:p-12">
+      <div className="mx-auto md:w-fit    ">
+        <div className="  mb-12 flex flex-col md:flex-row gap-10">
+          <div className=" flex items-start pt-4 gap-2  ">
             {[...Array(9)].map((_, i) => (
               <div
                 key={i}
@@ -30,15 +30,15 @@ export default function HuellaSection() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row ">
-          <div className="flex flex-col gap-6 w-full max-w-[1000px]   justify-center">
+        <div className="flex flex-col md:flex-row   items-center justify-center ">
+          <div className="flex flex-col gap-6 w-full   max-w-[1000px]   justify-center">
             <div className="relative overflow-hidden flex flex-col justify-around  md:min-h-[306px] rounded-2xl border-2 border-[#0F8354] p-6 shadow-sm w-full ">
               <div className="absolute right-4 top-4 ">
                 <div className="rounded-xl bg-[#0F83541A] p-2">
                   <Leaf className="h-8 w-8 text-[#0F8354]" />
                 </div>
               </div>
-              <div className="flex gap-6">
+              <div className="flex flex-col md:flex-row gap-6">
                 <div className="shrink-0">
                   <Image
                     src="/huella1-image.svg"
@@ -72,7 +72,7 @@ export default function HuellaSection() {
                   <Recycle className="h-8 w-8 text-[#006CFF]" />
                 </div>
               </div>
-              <div className="flex gap-6">
+              <div className="flex flex-col md:flex-row gap-6">
                 <div className="shrink-0">
                   <Image
                     src="/huella2-image.svg"
@@ -106,7 +106,7 @@ export default function HuellaSection() {
                   <Award className="h-8 w-8 text-[#ED6E12]" />
                 </div>
               </div>
-              <div className="flex gap-6">
+              <div className="flex flex-col md:flex-row gap-6">
                 <div className="shrink-0">
                   <Image
                     src="/huella3-image.svg"
@@ -148,7 +148,7 @@ export default function HuellaSection() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="text-[25px] border-2 border-[#0F8354] rounded-none text-[#0F8354]
+                  className="text-[18px] md:text-[25px] border-2 border-[#0F8354] rounded-none text-[#0F8354]
                    hover:bg-emerald-50 hover:text-emerald-800 font-righteous font-medium py-7 px-8 shadow-xl"
                 >
                   Ver productos de Bajo Consumo
