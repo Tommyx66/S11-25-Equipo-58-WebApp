@@ -19,7 +19,7 @@ export default function Header() {
   
   const { theme, setTheme } = useTheme()
 
-  // Links con IDs y sección Certificaciones
+
   const navItems: NavItem[] = [
     { label: 'Productos', href: '/#productos' },
     { label: 'Aprende', href: '/#aprende' },
@@ -53,7 +53,6 @@ export default function Header() {
         {/* ================= DESKTOP NAV ================= */}
         <nav className="hidden md:flex items-center h-full w-full px-10 max-w-7xl mx-auto">
           
-          {/* LOGO: Lleva al inicio */}
           <Link href="/#inicio" className="flex-shrink-0 mr-12 lg:mr-20 hover:opacity-90 transition">
             <Image
               src="/logo.png"
