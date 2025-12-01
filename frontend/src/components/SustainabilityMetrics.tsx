@@ -83,7 +83,23 @@ export function SustainabilityMetrics() {
   )
 }
 
-function MetricCard({ title, description, number, suffix, footer, icon }) {
+interface MetricCardProps {
+  title: string
+  description: string
+  number: number
+  suffix?: string
+  footer: string
+  icon: React.ReactNode
+}
+
+function MetricCard({
+  title,
+  description,
+  number,
+  suffix = "",
+  footer,
+  icon,
+}: MetricCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [value, setValue] = useState(0)
   const [started, setStarted] = useState(false)
@@ -117,7 +133,6 @@ function MetricCard({ title, description, number, suffix, footer, icon }) {
       ref={ref}
       className="rounded-[14px] border-2 border-[#0F8354] bg-gradient-to-br from-[#0F83541A] to-white p-6 shadow-sm w-full max-w-[380px] font-sans"
     >
-      {/* Icon */}
       <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#0F83541A] border border-[#0F8354]">
         {icon}
       </div>

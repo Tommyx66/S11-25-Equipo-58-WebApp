@@ -4,6 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
 import Header from "../components/Header"
 import { Righteous } from 'next/font/google'
+import { Footer } from "@/components/Footer";
 const _righteous = Righteous({ subsets: ["latin"], weight: "400" });
 
 const geistSans = Geist({
@@ -34,6 +35,7 @@ export default function RootLayout({
         <QueryProvider>
           <Header/>
           {children}
+          <Footer/>
         </QueryProvider>
       </body>
     </html>
