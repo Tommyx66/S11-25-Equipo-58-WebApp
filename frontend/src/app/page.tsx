@@ -3,6 +3,8 @@ import  ImpactStatistics  from '@/components/ImpactStatistics'
 import { ProductFilters } from '@/components/ProductFilters'
 import { ProductList } from '@/components/ProductList'
 import HuellaSection from '@/components/HuellaSection'
+import { LowImpactCarousel } from '@/components/LowImpactCarousel'
+
 
 export default function Home() {
   return (
@@ -13,7 +15,9 @@ export default function Home() {
         <HeroLanding />
       </section>
         <ImpactStatistics />
-
+      <div>
+        <LowImpactCarousel />
+      </div>
       <div className="container mx-auto px-4 py-8 space-y-20">
         
         {/* === SECCIÓN PRODUCTOS === */}
@@ -28,6 +32,7 @@ export default function Home() {
         </section>
 
         {/* === SECCIÓN APRENDE */}
+        
         <section id="aprende" className="scroll-mt-24">
         </section>
         
