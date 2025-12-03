@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function HuellaSection() {
   return (
-    <div className="min-h-screen mx-auto    p-6 md:p-12">
+    <div className="min-h-screen mx-auto   ">
       <div className="mx-auto md:w-fit    ">
         <div className="  mb-12 flex flex-col md:flex-row gap-10">
           <div className=" flex items-start pt-4 gap-2  ">
