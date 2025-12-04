@@ -5,6 +5,8 @@ import { ProductList } from '@/components/ProductList'
 import HuellaSection from '@/components/HuellaSection'
 import { LowImpactCarousel } from '@/components/LowImpactCarousel'
 import { SustainabilityMetrics } from '@/components/SustainabilityMetrics'
+import SellosSection from '@/components/SellosSection'
+import ReducirSection from '@/components/ReducirSection'
 
 
 export default function Home() {
@@ -41,6 +43,14 @@ export default function Home() {
 
         
       </div>
+
+      <section id="sellos" className="scroll-mt-24">
+          <SellosSection />
+        </section>
+
+        <section id="reducir" className="scroll-mt-24">
+          <ReducirSection />
+        </section>
     </main>
   );
 }
