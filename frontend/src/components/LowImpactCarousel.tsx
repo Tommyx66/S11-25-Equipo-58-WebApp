@@ -8,6 +8,7 @@ import {
   useSpring,
   useTransform,
   useInView,
+  Variants, // <--- 1. IMPORTANTE: Agregamos esto
 } from "framer-motion";
 import { Righteous, Inter } from "next/font/google";
 import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
@@ -78,7 +79,14 @@ export const products = [
   },
 ];
 
-const AnimatedStat = ({ value, suffix, label, decimals = 0 }) => {
+interface AnimatedStatProps {
+  value: number;
+  suffix: string;
+  label: string;
+  decimals?: number;
+}
+
+const AnimatedStat = ({ value, suffix, label, decimals = 0 }: AnimatedStatProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const spring = useSpring(0, { bounce: 0, duration: 2000 });
@@ -105,8 +113,9 @@ const AnimatedStat = ({ value, suffix, label, decimals = 0 }) => {
   );
 };
 
-const slideVariants = {
-  enter: (direction) => ({
+// <--- 2. Typamos esto como Variants para que TS entienda "spring"
+const slideVariants: Variants = {
+  enter: (direction: number) => ({
     x: direction > 0 ? "100%" : "-100%",
     scale: 1.1,
     opacity: 0,
@@ -123,7 +132,7 @@ const slideVariants = {
       opacity: { duration: 0.5 },
     },
   },
-  exit: (direction) => ({
+  exit: (direction: number) => ({
     x: direction < 0 ? "100%" : "-100%",
     scale: 0.95,
     opacity: 0,
@@ -136,7 +145,8 @@ const slideVariants = {
   }),
 };
 
-const textContainerVariants = {
+// <--- 3. Typamos esto también
+const textContainerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -147,7 +157,8 @@ const textContainerVariants = {
   },
 };
 
-const textItemVariants = {
+// <--- 4. Y esto
+const textItemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
@@ -163,20 +174,20 @@ const textItemVariants = {
 export function LowImpactCarousel() {
   const [[currentIndex, direction], setCurrentIndex] = useState([0, 0]);
   const [isPaused, setIsPaused] = useState(false);
-  const timeoutRef = useRef(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const getIndex = useCallback((index) => {
+  const getIndex = useCallback((index: number) => {
     return (index + products.length) % products.length;
   }, []);
 
   const paginate = useCallback(
-    (newDirection) => {
+    (newDirection: number) => {
       setCurrentIndex([getIndex(currentIndex + newDirection), newDirection]);
     },
     [currentIndex, getIndex]
   );
 
-  const goToSlide = (index) => {
+  const goToSlide = (index: number) => {
     if (index === currentIndex) return;
     setCurrentIndex([index, index > currentIndex ? 1 : -1]);
   };
@@ -184,13 +195,15 @@ export function LowImpactCarousel() {
   useEffect(() => {
     if (isPaused) return;
     timeoutRef.current = setTimeout(() => paginate(1), 6000);
-    return () => clearTimeout(timeoutRef.current);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, [currentIndex, isPaused, paginate]);
 
   const swipeConfidenceThreshold = 10000;
-  const swipePower = (offset, velocity) => Math.abs(offset) * velocity;
+  const swipePower = (offset: number, velocity: number) => Math.abs(offset) * velocity;
 
-  const handleDragEnd = (e, { offset, velocity }) => {
+  const handleDragEnd = (e: any, { offset, velocity }: any) => {
     const swipe = swipePower(offset.x, velocity.x);
     if (swipe < -swipeConfidenceThreshold) paginate(1);
     else if (swipe > swipeConfidenceThreshold) paginate(-1);
@@ -206,11 +219,9 @@ export function LowImpactCarousel() {
       <div className="container mx-auto px-4 xl:px-0">
         
         {/* === HEADER CON PUNTITOS === */}
-        {/* FIX: Agregado pl-4 md:pl-6 para despegar del margen izquierdo */}
         <div className="mb-12 flex flex-col md:flex-row gap-6 md:gap-10 items-start pl-8 md:pl-10">
           
           {/* PUNTITOS DECORATIVOS */}
-          {/* FIX: Agregado pt-3 para alinear mejor con el texto superior */}
           <div className="flex items-start pt-3 gap-2 shrink-0">
             {[...Array(9)].map((_, i) => (
               <div
@@ -238,7 +249,7 @@ export function LowImpactCarousel() {
         {/* === CAROUSEL CONTAINER === */}
         <div
           className="relative w-full h-[550px] md:h-[500px] lg:h-[550px]
-                     rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] group/carousel bg-gray-900"
+                      rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] group/carousel bg-gray-900"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={() => setIsPaused(true)}
