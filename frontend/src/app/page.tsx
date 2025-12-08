@@ -7,6 +7,7 @@ import { LowImpactCarousel } from '@/components/LowImpactCarousel'
 import { SustainabilityMetrics } from '@/components/SustainabilityMetrics'
 import SellosSection from '@/components/SellosSection'
 import ReducirSection from '@/components/ReducirSection'
+import { ShoppingCart } from '@/components/ShoppingCart'
 
 
 export default function Home() {
@@ -51,6 +52,7 @@ export default function Home() {
         <section id="reducir" className="scroll-mt-24">
           <ReducirSection />
         </section>
+      <ShoppingCart />
     </main>
   );
 }
