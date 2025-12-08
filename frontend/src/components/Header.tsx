@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Menu, X, Moon, Sun, ShoppingCart } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { useCart } from '@/contexts/CartContext'
 import clsx from 'clsx'
 
 interface NavItem {
@@ -18,6 +19,9 @@ export default function Header() {
   const [scrolled, setScrolled] = useState<boolean>(false)
   
   const { theme, setTheme } = useTheme()
+  const { toggleCart, cartItems } = useCart()
+  
+  const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
 
   const navItems: NavItem[] = [
@@ -97,8 +101,16 @@ export default function Header() {
               {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
             </button>
 
-            <button className="p-2 rounded-lg text-black/90 hover:bg-black/5 dark:hover:bg-white/10 transition">
+            <button 
+              onClick={toggleCart}
+              className="relative p-2 rounded-lg text-black/90 hover:bg-black/5 dark:hover:bg-white/10 transition"
+            >
               <ShoppingCart size={22} />
+              {cartItemsCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#0F8354] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemsCount}
+                </span>
+              )}
             </button>
 
             <Link
@@ -127,8 +139,16 @@ export default function Header() {
           </Link>
 
           <div className="flex items-center gap-2">
-            <button className="p-2 text-black/90 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-md">
+            <button 
+              onClick={toggleCart}
+              className="relative p-2 text-black/90 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-md"
+            >
                 <ShoppingCart size={24} />
+                {cartItemsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#0F8354] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItemsCount}
+                  </span>
+                )}
             </button>
             
             <button

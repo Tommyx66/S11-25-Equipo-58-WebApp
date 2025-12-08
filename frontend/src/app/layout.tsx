@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
+import { CartProvider } from "@/contexts/CartContext";
 import Header from "../components/Header"
 import { Righteous } from 'next/font/google'
 import { Footer } from "@/components/Footer";
@@ -33,9 +34,11 @@ export default function RootLayout({
         className={`${_righteous} ${_righteous} antialiased`}
       >
         <QueryProvider>
-          <Header/>
-          {children}
-          <Footer/>
+          <CartProvider>
+            <Header/>
+            {children}
+            <Footer/>
+          </CartProvider>
         </QueryProvider>
       </body>
     </html>

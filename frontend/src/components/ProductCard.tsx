@@ -1,8 +1,11 @@
+'use client'
+
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import type { Product } from "./ProductList"
+import { useCart } from "@/contexts/CartContext"
 
 interface ProductCardProps {
   product: Product
@@ -29,6 +32,7 @@ function formatPrice(precio: number): string {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart()
   const impactColor = getImpactColor(product.impactoAmbiental.nivel)
   const formattedPrice = formatPrice(product.precio)
 
@@ -105,7 +109,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="flex items-center justify-between pt-2 px-6">
           <span className="font-sans font-normal not-italic text-[24px] leading-[24px] align-middle">{formattedPrice}</span>
-          <Button size="lg" className="bg-[#0F8354] hover:bg-[#0F8354] text-white px-2 font-righteous text-md">
+          <Button 
+            size="lg" 
+            className="bg-[#0F8354] hover:bg-[#0F8354] text-white px-2 font-righteous text-md"
+            onClick={() => addToCart(product)}
+          >
            <Image src="/icons/shopping-cart.svg"
            alt="Shopping Cart Icon"
            width={24}
