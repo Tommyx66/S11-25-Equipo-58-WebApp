@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, Moon, Sun, ShoppingCart } from 'lucide-react'
+import { Menu, X, ShoppingCart } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useCart } from '@/contexts/CartContext'
 import clsx from 'clsx'
@@ -18,7 +18,6 @@ export default function Header() {
   const [mounted, setMounted] = useState<boolean>(false)
   const [scrolled, setScrolled] = useState<boolean>(false)
   
-  const { theme, setTheme } = useTheme()
   const { toggleCart, cartItems } = useCart()
   
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
@@ -40,7 +39,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
 
   if (!mounted) return null
 
@@ -93,13 +91,8 @@ export default function Header() {
 
           {/* ICONOS + LOGIN */}
           <div className="flex items-center gap-3 lg:gap-5 ml-4">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-black/90 hover:bg-black/5 dark:hover:bg-white/10 transition"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
-            </button>
+            
+          
 
             <button 
               onClick={toggleCart}
@@ -204,15 +197,7 @@ export default function Header() {
 
           <div className="h-px bg-gray-200 dark:bg-gray-800 my-4" />
 
-          <div className="flex items-center justify-between">
-            <span className="font-righteous text-lg">Tema</span>
-            <button
-              onClick={toggleTheme}
-              className="p-3 bg-gray-100 dark:bg-slate-800 rounded-xl transition"
-            >
-              {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
-            </button>
-          </div>
+          
 
           <Link
             href="/login"

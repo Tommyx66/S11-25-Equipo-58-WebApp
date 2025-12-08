@@ -65,30 +65,34 @@ export function HeroLanding() {
 
         <div className={`${righteous.className} flex flex-col items-center justify-center gap-6 sm:flex-row`}>
           {/* Botón Principal */}
-          <Button 
-            size="lg" 
-            className="group relative h-16 bg-[#0F8354] px-10 text-xl font-normal text-white 
-            transition-all duration-300 ease-out
-            hover:bg-[#0a633e] hover:shadow-lg hover:shadow-[#0F8354]/20 hover:-translate-y-0.5
-            active:scale-95 w-full sm:w-auto overflow-hidden"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              Explorar Catálogo
-              <ArrowRight className="h-6 w-6 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110" />
-            </span>
-          </Button>
+          <Button
+  size="lg"
+  asChild
+  className="group relative h-16 bg-[#0F8354] px-10 text-xl font-normal text-white 
+  transition-all duration-300 ease-out
+  hover:bg-[#0a633e] hover:shadow-lg hover:shadow-[#0F8354]/20 hover:-translate-y-0.5
+  active:scale-95 w-full sm:w-auto overflow-hidden"
+>
+  <a href="#productos">
+    <span className="relative z-10 flex items-center gap-2">
+      Explorar Catálogo
+      <ArrowRight className="h-6 w-6 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110" />
+    </span>
+  </a>
+</Button>
 
-          {/* Botón Secundario */}
-          <Button 
-            size="lg" 
-            variant="outline" 
-            className="h-16 border-2 border-[#0F8354] bg-white px-10 text-xl font-normal text-[#1A1A1B] 
-            transition-all duration-300 ease-out
-            hover:bg-[#0F8354]/10 hover:text-[#0F8354] hover:border-[#0a633e] hover:-translate-y-0.5
-            active:scale-95 w-full sm:w-auto"
-          >
-            Ver Impacto Real
-          </Button>
+<Button
+  size="lg"
+  variant="outline"
+  asChild
+  className="h-16 border-2 border-[#0F8354] bg-white px-10 text-xl font-normal text-[#1A1A1B] 
+  transition-all duration-300 ease-out
+  hover:bg-[#0F8354]/10 hover:text-[#0F8354] hover:border-[#0a633e] hover:-translate-y-0.5
+  active:scale-95 w-full sm:w-auto"
+>
+  <a href="#impacto">Ver Impacto Real</a>
+</Button>
+
         </div>
       </div>
 
