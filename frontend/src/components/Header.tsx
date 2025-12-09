@@ -27,7 +27,7 @@ export default function Header() {
     { label: 'Productos', href: '/#productos' },
     { label: 'Aprende', href: '/#aprende' },
     { label: 'Nuestro impacto', href: '/#impacto' },
-    { label: 'Certificaciones', href: '/#certificaciones' },
+    { label: 'Certificaciones', href: '/#sellos' },
   ]
 
   useEffect(() => {
