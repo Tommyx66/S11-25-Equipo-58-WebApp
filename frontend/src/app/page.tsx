@@ -12,8 +12,7 @@ import { ShoppingCart } from '@/components/ShoppingCart'
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white dark:bg-slate-950">
-      
+<main className="min-h-screen bg-white dark:bg-slate-950 w-full overflow-x-hidden [zoom:0.8] lg:[zoom:0.82]">      
       {/* Inicio */}
       <section id="inicio">
         <HeroLanding />
@@ -22,22 +21,22 @@ export default function Home() {
       <div>
         <LowImpactCarousel />
       </div>
-      <div className="container mx-auto px-4 py-8 space-y-20">
+      <div className="container mx-auto px-4 py-8">
         
         {/* === SECCIÓN PRODUCTOS === */}
-        <section id="productos" className="scroll-mt-24 space-y-8">
+        <section id="productos" className="scroll ">
            <ProductFilters />
            <ProductList />
         </section>
 
         {/* === SECCIÓN APRENDE === */}
-        <section id="aprende" className="scroll-mt-24">
+        <section id="aprende" className="scroll">
            <HuellaSection />
         </section>
 
         {/* === SECCIÓN IMPACTO */}
         
-        <section id="impacto" className="scroll-mt-24">
+        <section id="impacto" className="scroll">
           <SustainabilityMetrics />
         </section>
 

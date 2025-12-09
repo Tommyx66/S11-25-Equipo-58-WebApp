@@ -3,42 +3,41 @@ import Image from "next/image";
 
 export default function SellosSection() {
   return (
-    <div className="mb-20 mx-auto overflow-hidden ">
-      <div className=" w-full mx-auto   container   ">
-        <div className="  mb-12 flex flex-col md:flex-row gap-10  container  w-full justify-start  ">
-          <div className=" flex items-start pt-4 gap-2  ">
+    // CAMBIO: Agregué w-full para asegurar ancho completo
+    <div className="mb-20 mx-auto overflow-hidden w-full">
+      {/* CAMBIO: Agregué 'px-6 md:px-12' para despegar el contenido de los bordes */}
+      <div className="w-full mx-auto container px-6 md:px-12">
+        <div className="mb-12 flex flex-col md:flex-row gap-6 md:gap-10 w-full justify-start">
+          {/* PUNTITOS */}
+          <div className="flex items-start pt-2 gap-2 shrink-0">
             {[...Array(9)].map((_, i) => (
               <div
                 key={i}
-                className="h-[25px] w-[25px] rounded-full"
+                // CAMBIO: Reduje un poco el tamaño en mobile: h-[20px] w-[20px]
+                className="h-[20px] w-[20px] md:h-[25px] md:w-[25px] rounded-full"
                 style={{
                   backgroundColor: `rgba(16, 185, 129, ${0.2 + i * 0.1})`,
                 }}
               />
             ))}
           </div>
-          <div>
-            <h2 className="mb-4 font-righteous text-[#1A1A1B] text-4xl  font-light text-balance md:text-5xl">
-            Sellos de confianza
-            </h2>
-            <p className="max-w-4xl text-2xl font-regular font-sans text-[#1A1A1B] text-pretty">
-            Trabajamos exclusivamente con productos certificados por las principales organizaciones ambientales
 
+          {/* TEXTO */}
+          <div>
+            <h2 className="mb-4 font-righteous text-[#1A1A1B] text-4xl font-light text-balance md:text-5xl">
+              Sellos de confianza
+            </h2>
+            <p className="max-w-4xl text-xl md:text-2xl font-regular font-sans text-[#1A1A1B] text-pretty">
+              Trabajamos exclusivamente con productos certificados por las
+              principales organizaciones ambientales
             </p>
           </div>
         </div>
-
-
-        <div className="relative w-full overflow-hidden">
-       
       </div>
 
-     
-
-       
-      </div>
-      <div className="flex md:gap-20 mt-5 gap-10 mx-10 w-full animate-scroll items-center">
-        
+      {/* CARRUSEL INFINITO (Sin cambios de lógica, solo espaciado) */}
+      <div className="flex md:gap-20 mt-5 gap-10 mx-4 w-full animate-scroll items-center">
+        {/* ... (Tus imágenes originales sin cambios) ... */}
         <Image
           src="/img/sellos/1.svg"
           alt="EU Ecolabel logo"
@@ -62,7 +61,7 @@ export default function SellosSection() {
         />
         <Image
           src="/img/sellos/4.svg"
-          alt="ORganic Textile Logo"
+          alt="Organic Textile Logo"
           width={267}
           height={251}
           className="shrink-0 w-[133px] h-[125px] md:w-[267px] md:h-[251px]"
@@ -88,7 +87,9 @@ export default function SellosSection() {
           height={171}
           className="shrink-0 w-[149px] h-[85px] md:w-[258px] md:h-[171px]"
         />
-         <Image
+
+        {/* Repetición para el efecto infinito */}
+        <Image
           src="/img/sellos/1.svg"
           alt="Unity Logo"
           width={178}
@@ -137,22 +138,21 @@ export default function SellosSection() {
           height={171}
           className="shrink-0 w-[149px] h-[85px] md:w-[258px] md:h-[171px]"
         />
-         <style jsx>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
 
-        .animate-scroll {
-          animation: scroll 60s linear infinite;
-          width: max-content;
-          
-        }
-      `}</style>
+        <style jsx>{`
+          @keyframes scroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          .animate-scroll {
+            animation: scroll 60s linear infinite;
+            width: max-content;
+          }
+        `}</style>
       </div>
     </div>
   );

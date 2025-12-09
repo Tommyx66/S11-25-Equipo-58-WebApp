@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import { Leaf, Globe, Droplets } from "lucide-react";
 import { Righteous, Inter } from "next/font/google";
-import { motion, useSpring, useTransform, useInView } from "framer-motion";
+import { motion, useSpring, useTransform, useInView, Variants } from "framer-motion";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const righteous = Righteous({
@@ -12,24 +12,40 @@ const righteous = Righteous({
   variable: "--font-righteous",
 });
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { type: "spring", stiffness: 50, damping: 20 }
+  },
+};
+
 export function SustainabilityMetrics() {
   return (
     <section
-      className={`w-full bg-white px-6 py-20 md:px-12 lg:px-24 ${inter.variable} ${righteous.variable}`}
+      className={`w-full bg-white px-6 py-12 md:py-20 lg:px-24 ${inter.variable} ${righteous.variable}`}
     >
       <div className="mx-auto max-w-7xl">
         
         {/* === HEADER === */}
-        {/* CORRECCIÓN: Eliminé 'pl-4 md:pl-6' porque la sección ya tiene px-6/px-12 */}
-        <div className="mb-16 flex flex-col md:flex-row gap-6 md:gap-10 items-start">
+        <div className="mb-12 md:mb-16 flex flex-col md:flex-row gap-6 md:gap-10 items-start">
           
-          {/* PUNTITOS DECORATIVOS */}
-          {/* CORRECCIÓN: Cambié pt-3 a pt-4 para igualar exactamente la sección Huella */}
-          <div className="flex items-start pt-4 gap-2 shrink-0">
+          <div className="flex items-start pt-2 md:pt-4 gap-2 shrink-0">
             {[...Array(9)].map((_, i) => (
               <div
                 key={i}
-                className="h-[25px] w-[25px] rounded-full shrink-0"
+                className="h-[20px] w-[20px] md:h-[25px] md:w-[25px] rounded-full shrink-0"
                 style={{
                   backgroundColor: `rgba(16, 185, 129, ${0.2 + i * 0.1})`,
                 }}
@@ -39,10 +55,10 @@ export function SustainabilityMetrics() {
 
           {/* TEXTO DEL HEADER */}
           <div>
-            <h2 className="mb-4 font-righteous text-4xl md:text-5xl text-gray-900 leading-tight text-balance">
+            <h2 className="mb-4 font-righteous text-3xl md:text-5xl text-gray-900 leading-tight text-balance">
               Datos Reales, <span className="text-[#0F8354]">Impacto Real</span>
             </h2>
-            <p className="max-w-4xl text-xl md:text-2xl text-gray-600 font-sans text-pretty font-regular">
+            <p className="max-w-4xl text-lg md:text-2xl text-gray-600 font-sans text-pretty font-regular">
               Métricas basadas en productos verificados, con datos transparentes
               sobre emisiones, origen y uso de recursos.
             </p>
@@ -50,49 +66,67 @@ export function SustainabilityMetrics() {
         </div>
 
         {/* ───────────────── CARDS GRID ───────────────── */}
-        <div className="grid gap-8 md:grid-cols-3 justify-items-center">
-          <MetricCard
-            title="100% Transparente"
-            description="Huella de carbono medida y verificada en cada producto."
-            number={6.7}
-            decimals={1}
-            suffix=" kg CO₂"
-            footer="Promedio por producto"
-            icon={<Leaf className="h-6 w-6 text-[#0F8354]" />}
-          />
+        <motion.div 
+          className="grid gap-8 grid-cols-1 lg:grid-cols-3 justify-items-center"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          <motion.div variants={cardVariants} className="w-full max-w-[380px]">
+            <MetricCard
+              title="100% Transparente"
+              description="Huella de carbono medida y verificada en cada producto."
+              number={6.7}
+              decimals={1}
+              suffix=" kg CO₂"
+              footer="Promedio por producto"
+              icon={<Leaf className="h-6 w-6 text-[#0F8354]" />}
+            />
+          </motion.div>
 
-          <MetricCard
-            title="Origen Verificado"
-            description="Seguimos el origen y la distancia recorrida por cada producto."
-            number={6}
-            decimals={0}
-            suffix=""
-            footer="Productos de bajo impacto"
-            icon={<Globe className="h-6 w-6 text-[#0F8354]" />}
-          />
+          <motion.div variants={cardVariants} className="w-full max-w-[380px]">
+            <MetricCard
+              title="Origen Verificado"
+              description="Seguimos el origen y la distancia recorrida por cada producto."
+              number={6}
+              decimals={0}
+              suffix=""
+              footer="Productos de bajo impacto"
+              icon={<Globe className="h-6 w-6 text-[#0F8354]" />}
+            />
+          </motion.div>
 
-          <MetricCard
-            title="Consumo de Agua"
-            description="Registro del consumo hídrico durante toda la producción."
-            number={158}
-            decimals={0}
-            suffix=" L"
-            footer="Promedio por producto"
-            icon={<Droplets className="h-6 w-6 text-[#0F8354]" />}
-          />
-        </div>
+          <motion.div variants={cardVariants} className="w-full max-w-[380px]">
+            <MetricCard
+              title="Consumo de Agua"
+              description="Registro del consumo hídrico durante toda la producción."
+              number={158}
+              decimals={0}
+              suffix=" L"
+              footer="Promedio por producto"
+              icon={<Droplets className="h-6 w-6 text-[#0F8354]" />}
+            />
+          </motion.div>
+        </motion.div>
 
         {/* BANNER INFERIOR */}
-        <div className="mt-12 border-2 border-[#0F8354] bg-gradient-to-r from-[#0F83541A] to-white p-8 w-full text-center rounded-2xl">
-          <p className="text-lg md:text-xl text-[#1A1A1B] font-sans">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
+          className="mt-12 border-2 border-[#0F8354] bg-gradient-to-r from-[#0F83541A] to-white p-6 md:p-8 w-full text-center rounded-2xl"
+        >
+          <p className="text-base md:text-xl text-[#1A1A1B] font-sans">
             Las marcas en{" "}
-            <span className="font-righteous text-[#0F8354] text-2xl">
+            <span className="font-righteous text-[#0F8354] text-xl md:text-2xl">
               EcoShop
             </span>{" "}
             cumplen con estándares de transparencia y compromiso ambiental
             verificable.
           </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -132,7 +166,7 @@ function MetricCard({
   return (
     <div
       ref={ref}
-      className="flex flex-col justify-between rounded-[20px] border-2 border-[#0F8354] bg-gradient-to-br from-[#0F83541A] to-white p-6 shadow-sm w-full max-w-[380px] font-sans hover:shadow-md transition-shadow duration-300"
+      className="flex flex-col justify-between rounded-[20px] border-2 border-[#0F8354] bg-gradient-to-br from-[#0F83541A] to-white p-6 shadow-sm w-full h-full font-sans hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
     >
       <div>
         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-[#0F83541A] border border-[#0F8354]/30">
