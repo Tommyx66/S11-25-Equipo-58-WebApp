@@ -3,13 +3,16 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, ShoppingCart } from 'lucide-react'
-import { useTheme } from 'next-themes'
+import { Menu, X, ShoppingCart, BarChart3 } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
 import { useUserData } from '@/contexts/UserContext'
+import { useUI } from '@/contexts/UIContext'
 import clsx from 'clsx'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { AuthModal } from './AuthModal'
+import { ImpactModal } from './ImpactModal'
+import { CheckoutModal } from './CheckoutModal'
+import { ProductDetailModal } from './ProductDetailModal'
 
 interface NavItem {
   label: string;
@@ -19,15 +22,19 @@ interface NavItem {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [scrolled, setScrolled] = useState<boolean>(false)
-  const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false)
   const [mounted, setMounted] = useState<boolean>(true)
   
   const { toggleCart, cartItems } = useCart()
   const { isAdmin } = useUserData()
   
+  const { 
+    isAuthOpen, 
+    openAuth, 
+    closeAuth, 
+    openImpact 
+  } = useUI()
+  
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
-
-
 
   const navItems: NavItem[] = [
     { label: 'Productos', href: '/#productos' },
@@ -44,10 +51,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-
   return (
     <>
-      <AuthModal open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+      <AuthModal open={isAuthOpen} onClose={closeAuth} />
+      <ImpactModal />
+      <CheckoutModal />
+      <ProductDetailModal />
       <header
         className={clsx(
           "sticky top-0 z-40 w-full transition-all duration-300 border-b backdrop-blur-xl",
@@ -59,7 +68,6 @@ export default function Header() {
         {/* ================= DESKTOP NAV ================= */}
         <nav className="hidden md:flex items-center h-full w-full px-10 max-w-7xl mx-auto">
           
-
           <Link href="/#inicio" className="shrink-0 mr-12 lg:mr-20 hover:opacity-90 transition">
             <Image
               src="/logo.png"
@@ -96,8 +104,18 @@ export default function Header() {
           {/* ICONOS + LOGIN */}
           <div className="flex items-center gap-3 lg:gap-5 ml-4">
             
-          
+            {/* BOTÓN MI IMPACTO */}
+            <SignedIn>
+               <button 
+                 onClick={openImpact}
+                 className="p-2 rounded-lg text-[#0F8354] hover:bg-[#0F8354]/10 transition"
+                 title="Mi Impacto Ambiental"
+               >
+                 <BarChart3 size={24} />
+               </button>
+            </SignedIn>
 
+            {/* BOTÓN CARRITO */}
             <button 
               onClick={toggleCart}
               className="relative p-2 rounded-lg text-black/90 hover:bg-black/5 dark:hover:bg-white/10 transition"
@@ -110,18 +128,7 @@ export default function Header() {
               )}
             </button>
 
-            <SignedOut>
-              <button
-                onClick={() => setIsAuthOpen(true)}
-                className="font-righteous text-sm lg:text-base px-4 py-2 border-2 border-blue-600 text-blue-600 
-                dark:text-blue-400 dark:border-blue-400 rounded-lg bg-white dark:bg-slate-900 
-                transition-all duration-200 hover:bg-blue-600 hover:text-white 
-                dark:hover:bg-blue-600 dark:hover:text-white hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
-              >
-                Iniciar sesión
-              </button>
-            </SignedOut>
-
+            {/* bARRA DE USUARIO (DASHBOARD + AVATAR) */}
             <SignedIn>
               <div suppressHydrationWarning>
                 {mounted && isAdmin && (
@@ -144,6 +151,20 @@ export default function Header() {
                 }}
               />
             </SignedIn>
+
+            {/* BOTÓN INICIAR SESIÓN ( NO LOGUEADO) */}
+            <SignedOut>
+              <button
+                onClick={openAuth}
+                className="font-righteous text-sm lg:text-base px-4 py-2 border-2 border-blue-600 text-blue-600 
+                dark:text-blue-400 dark:border-blue-400 rounded-lg bg-white dark:bg-slate-900 
+                transition-all duration-200 hover:bg-blue-600 hover:text-white 
+                dark:hover:bg-blue-600 dark:hover:text-white hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
+              >
+                Iniciar sesión
+              </button>
+            </SignedOut>
+
           </div>
         </nav>
 
@@ -165,12 +186,12 @@ export default function Header() {
               onClick={toggleCart}
               className="relative p-2 text-black/90 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-md"
             >
-                <ShoppingCart size={24} />
-                {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#0F8354] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    {cartItemsCount}
-                  </span>
-                )}
+              <ShoppingCart size={24} />
+              {cartItemsCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#0F8354] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemsCount}
+                </span>
+              )}
             </button>
             
             <button
@@ -226,13 +247,11 @@ export default function Header() {
 
           <div className="h-px bg-gray-200 dark:bg-gray-800 my-4" />
 
-          
-
           <SignedOut>
             <button
               onClick={() => {
                 setIsMenuOpen(false)
-                setIsAuthOpen(true)
+                openAuth()
               }}
               className="font-righteous mt-4 w-full py-4 border-2 border-blue-600 text-blue-600 
               dark:text-blue-400 dark:border-blue-400 rounded-xl bg-white dark:bg-slate-900 
@@ -243,6 +262,18 @@ export default function Header() {
           </SignedOut>
 
           <SignedIn>
+            <button
+               onClick={() => {
+                 setIsMenuOpen(false)
+                 openImpact()
+               }}
+               className="font-righteous mt-2 w-full py-4 bg-[#0F8354]/10 text-[#0F8354]
+               rounded-xl transition hover:bg-[#0F8354] hover:text-white text-center text-lg flex items-center justify-center gap-2"
+            >
+               <BarChart3 size={20} />
+               Ver Mi Impacto
+            </button>
+
             <div suppressHydrationWarning>
               {mounted && isAdmin && (
                 <Link
@@ -250,13 +281,13 @@ export default function Header() {
                   onClick={() => setIsMenuOpen(false)}
                   className="font-righteous mt-4 w-full py-4 bg-purple-600 text-white 
                   dark:bg-purple-500 rounded-xl transition hover:bg-purple-700 
-                  dark:hover:bg-purple-600 text-center text-lg"
+                  dark:hover:bg-purple-600 text-center text-lg block"
                 >
                   DASHBOARD
                 </Link>
               )}
             </div>
-            <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
               <span className="font-righteous text-lg">Mi cuenta</span>
               <UserButton
                 afterSignOutUrl="/"
