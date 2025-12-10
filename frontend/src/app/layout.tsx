@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import { QueryProvider } from "@/providers/query-provider";
 import { CartProvider } from "@/contexts/CartContext";
+import { UserProvider } from "@/contexts/UserContext";
 import Header from "../components/Header"
 import { Righteous } from 'next/font/google'
 import { Footer } from "@/components/Footer";
+import { ClerkTokenLogger } from "@/components/ClerkTokenLogger";
 const _righteous = Righteous({ subsets: ["latin"], weight: "400" });
 
 const geistSans = Geist({
@@ -29,18 +32,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${_righteous} ${_righteous} antialiased`}
-      >
-        <QueryProvider>
-          <CartProvider>
-            <Header/>
-            {children}
-            <Footer/>
-          </CartProvider>
-        </QueryProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} ${_righteous} antialiased`}
+        >
+          <QueryProvider>
+            <CartProvider>
+              <UserProvider>
+                <ClerkTokenLogger />
+                <Header/>
+                {children}
+                <Footer/>
+              </UserProvider>
+            </CartProvider>
+          </QueryProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

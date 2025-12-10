@@ -6,7 +6,10 @@ import Link from 'next/link'
 import { Menu, X, ShoppingCart } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useCart } from '@/contexts/CartContext'
+import { useUserData } from '@/contexts/UserContext'
 import clsx from 'clsx'
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { AuthModal } from './AuthModal'
 
 interface NavItem {
   label: string;
@@ -15,12 +18,15 @@ interface NavItem {
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
-  const [mounted, setMounted] = useState<boolean>(false)
   const [scrolled, setScrolled] = useState<boolean>(false)
+  const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false)
+  const [mounted, setMounted] = useState<boolean>(true)
   
   const { toggleCart, cartItems } = useCart()
+  const { isAdmin } = useUserData()
   
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
+
 
 
   const navItems: NavItem[] = [
@@ -31,7 +37,6 @@ export default function Header() {
   ]
 
   useEffect(() => {
-    setMounted(true)
     const handleScroll = () => {
       setScrolled(window.scrollY > 10)
     }
@@ -40,10 +45,9 @@ export default function Header() {
   }, [])
 
 
-  if (!mounted) return null
-
   return (
     <>
+      <AuthModal open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       <header
         className={clsx(
           "sticky top-0 z-40 w-full transition-all duration-300 border-b backdrop-blur-xl",
@@ -56,7 +60,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center h-full w-full px-10 max-w-7xl mx-auto">
           
 
-          <Link href="/#inicio" className="flex-shrink-0 mr-12 lg:mr-20 hover:opacity-90 transition">
+          <Link href="/#inicio" className="shrink-0 mr-12 lg:mr-20 hover:opacity-90 transition">
             <Image
               src="/logo.png"
               alt="eco SHOP"
@@ -106,15 +110,40 @@ export default function Header() {
               )}
             </button>
 
-            <Link
-              href="/login"
-              className="font-righteous text-sm lg:text-base px-4 py-2 border-2 border-blue-600 text-blue-600 
-              dark:text-blue-400 dark:border-blue-400 rounded-lg bg-white dark:bg-slate-900 
-              transition-all duration-200 hover:bg-blue-600 hover:text-white 
-              dark:hover:bg-blue-600 dark:hover:text-white hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
-            >
-              Iniciar sesión
-            </Link>
+            <SignedOut>
+              <button
+                onClick={() => setIsAuthOpen(true)}
+                className="font-righteous text-sm lg:text-base px-4 py-2 border-2 border-blue-600 text-blue-600 
+                dark:text-blue-400 dark:border-blue-400 rounded-lg bg-white dark:bg-slate-900 
+                transition-all duration-200 hover:bg-blue-600 hover:text-white 
+                dark:hover:bg-blue-600 dark:hover:text-white hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
+              >
+                Iniciar sesión
+              </button>
+            </SignedOut>
+
+            <SignedIn>
+              <div suppressHydrationWarning>
+                {mounted && isAdmin && (
+                  <Link
+                    href="/dashboard"
+                    className="font-righteous text-sm lg:text-base px-4 py-2 bg-purple-600 text-white 
+                    dark:bg-purple-500 rounded-lg transition-all duration-200 hover:bg-purple-700 
+                    dark:hover:bg-purple-600 hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
+                  >
+                    DASHBOARD
+                  </Link>
+                )}
+              </div>
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "h-9 w-9",
+                  },
+                }}
+              />
+            </SignedIn>
           </div>
         </nav>
 
@@ -166,7 +195,7 @@ export default function Header() {
       {/* MOBILE SIDEBAR */}
       <aside
         className={clsx(
-          "fixed top-0 right-0 z-[60] w-[80%] max-w-sm h-full bg-white dark:bg-slate-950 shadow-2xl p-6 md:hidden",
+          "fixed top-0 right-0 z-60 w-[80%] max-w-sm h-full bg-white dark:bg-slate-950 shadow-2xl p-6 md:hidden",
           "transition-transform duration-300 ease-[cubic-bezier(.25,.8,.25,1)]",
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         )}
@@ -199,15 +228,44 @@ export default function Header() {
 
           
 
-          <Link
-            href="/login"
-            onClick={() => setIsMenuOpen(false)}
-            className="font-righteous mt-4 w-full py-4 border-2 border-blue-600 text-blue-600 
-            dark:text-blue-400 dark:border-blue-400 rounded-xl bg-white dark:bg-slate-900 
-            transition hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white text-center text-lg"
-          >
-            Iniciar sesión
-          </Link>
+          <SignedOut>
+            <button
+              onClick={() => {
+                setIsMenuOpen(false)
+                setIsAuthOpen(true)
+              }}
+              className="font-righteous mt-4 w-full py-4 border-2 border-blue-600 text-blue-600 
+              dark:text-blue-400 dark:border-blue-400 rounded-xl bg-white dark:bg-slate-900 
+              transition hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white text-center text-lg"
+            >
+              Iniciar sesión
+            </button>
+          </SignedOut>
+
+          <SignedIn>
+            <div suppressHydrationWarning>
+              {mounted && isAdmin && (
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="font-righteous mt-4 w-full py-4 bg-purple-600 text-white 
+                  dark:bg-purple-500 rounded-xl transition hover:bg-purple-700 
+                  dark:hover:bg-purple-600 text-center text-lg"
+                >
+                  DASHBOARD
+                </Link>
+              )}
+            </div>
+            <div className="flex items-center justify-between mt-2">
+              <span className="font-righteous text-lg">Mi cuenta</span>
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: { userButtonAvatarBox: "h-10 w-10" },
+                }}
+              />
+            </div>
+          </SignedIn>
         </div>
       </aside>
     </>
