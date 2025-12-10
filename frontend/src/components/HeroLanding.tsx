@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
-// Configuración de la fuente
 const righteous = Righteous({
   subsets: ['latin'],
   weight: '400',
@@ -13,14 +12,12 @@ const righteous = Righteous({
 })
 
 export function HeroLanding() {
-  // Estado para columnas: 10 en móvil, 20 en desktop
   const [gridCols, setGridCols] = useState(10)
 
   useEffect(() => {
     const handleResize = () => {
       setGridCols(window.innerWidth < 768 ? 10 : 20)
     }
-    // Detectar tamaño inicial
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
@@ -36,7 +33,6 @@ export function HeroLanding() {
       <div 
         className="absolute inset-0 grid gap-3 md:gap-4 px-4 pointer-events-none"
         style={{
-          // Usamos la variable de estado gridCols
           gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
           gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
         }}
@@ -44,13 +40,11 @@ export function HeroLanding() {
         {Array.from({ length: TOTAL_DOTS }).map((_, i) => {
           const col = i % gridCols
           
-          // Cálculo del delay para la ola
           const delay = -(gridCols - col) * 0.2
           
           return (
             <div key={i} className="flex items-center justify-center">
               <div
-                // Ajuste de tamaño responsive: max-w-[40px] en movil, 60px en desktop
                 className="rounded-full bg-[#E0F2EB] aspect-square w-full max-w-[40px] md:max-w-[60px] will-change-[opacity,transform]"
                 style={{
                   animation: `waveColor 8s ease-in-out infinite`,
@@ -111,7 +105,7 @@ export function HeroLanding() {
         </div>
       </div>
 
-      {/* Estilos de animación (Intactos como pediste) */}
+      {/* Estilos de animación */}
       <style jsx>{`
         @keyframes waveColor {
           0%, 100% { 

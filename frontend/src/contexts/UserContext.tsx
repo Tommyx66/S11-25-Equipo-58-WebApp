@@ -1,17 +1,20 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { useAuth } from '@clerk/nextjs'
+import { useAuth, useUser } from '@clerk/nextjs'
 
 interface UserData {
   usuarioId: number
   clerkId: string
   email: string
   nombre: string
-  direccionDefault: string | null
   rol: string
-  fechaRegistro: string
-  isAdmin: boolean
+  ecoPuntos: number
+  metricas: {
+    co2Ahorrado: number
+    aguaAhorrada: number
+    comprasSostenibles: number
+  }
 }
 
 interface UserContextType {
@@ -25,78 +28,82 @@ const UserContext = createContext<UserContextType | undefined>(undefined)
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const { isSignedIn, getToken, userId } = useAuth()
+  const { user } = useUser()
   const [userData, setUserData] = useState<UserData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ecoshop-backend-mm8u.onrender.com/api/v1';
+
   const fetchUserData = async () => {
-    if (!isSignedIn || !userId) {
+    if (!isSignedIn) {
       setUserData(null)
       setIsLoading(false)
       return
     }
 
     try {
-      const token = await getToken()
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+      // 1. OBTENER DATOS LOCALES 
+      const localStr = typeof window !== 'undefined' ? localStorage.getItem('user_stats') : null;
+      const local = localStr ? JSON.parse(localStr) : {};
+      
+      const localPoints = Number(local.ecoPuntos || 0);
+      const localCO2 = Number(local.co2 || local.co2Ahorrado || 0);
+      const localAgua = Number(local.agua || local.aguaAhorrada || 0);
+      const localCompras = Number(local.compras || local.comprasSostenibles || 0);
 
-      if (!backendUrl) {
-        console.error('NEXT_PUBLIC_BACKEND_URL no está configurado en el .env')
-        setIsLoading(false)
-        return
-      }
+      // 2. OBTENER DATOS BACKEND
+      let backendData: any = {};
+      try {
+        const token = await getToken();
+        if (token) {
+           const res = await fetch(`${API_URL}/usuarios/me`, {
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+              cache: 'no-store'
+           });
+           if (res.ok) backendData = await res.json();
+        }
+      } catch (e) { console.warn("Backend offline o error") }
 
-      const response = await fetch(`${backendUrl}/api/v1/usuarios/me`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-        },
+      // 3. FUSIÓN 
+      const backendMetricas = backendData.metricas || {};
+
+      const mergedMetrics = {
+          co2Ahorrado: Math.max(localCO2, Number(backendMetricas.co2Ahorrado || 0)),
+          aguaAhorrada: Math.max(localAgua, Number(backendMetricas.aguaAhorrada || 0)),
+          comprasSostenibles: Math.max(localCompras, Number(backendMetricas.comprasSostenibles || 0))
+      };
+      
+      const mergedPoints = Math.max(localPoints, Number(backendData.ecoPuntos || 0));
+
+      // 4. GUARDAR ESTADO FINAL
+      setUserData({
+        usuarioId: backendData.usuarioId || 999,
+        clerkId: userId || "",
+        email: user?.primaryEmailAddress?.emailAddress || "",
+        nombre: user?.fullName || "Usuario",
+        rol: backendData.rol || "USER",
+        ecoPuntos: mergedPoints,
+        metricas: mergedMetrics
       })
 
-
-
-      if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          console.log('Usuario no autenticado o sin permisos')
-          setUserData(null)
-        } else {
-          throw new Error(`Error al obtener datos del usuario: ${response.status}`)
-        }
-      } else {
-        const data = await response.json()
-        console.log(data)
-        setUserData(data)
-        console.log('Datos del usuario obtenidos:', data)
-      }
     } catch (error) {
-      console.error('Error obteniendo datos del usuario:', error)
-      setUserData(null)
+      console.error('Error user data:', error)
     } finally {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    if (isSignedIn && userId) {
-      fetchUserData()
-    } else {
-      setUserData(null)
-      setIsLoading(false)
-    }
+    fetchUserData()
   }, [isSignedIn, userId])
-
-  const refreshUserData = async () => {
-    setIsLoading(true)
-    await fetchUserData()
-  }
 
   return (
     <UserContext.Provider
       value={{
         userData,
-        isAdmin: userData?.isAdmin ?? false,
+        isAdmin: userData?.rol === 'ADMIN',
         isLoading,
-        refreshUserData,
+        refreshUserData: fetchUserData,
       }}
     >
       {children}
@@ -106,9 +113,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
 export function useUserData() {
   const context = useContext(UserContext)
-  if (context === undefined) {
-    throw new Error('useUserData must be used within a UserProvider')
-  }
+  if (context === undefined) throw new Error('useUserData must be used within a UserProvider')
   return context
 }
-

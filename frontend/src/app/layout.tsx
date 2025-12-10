@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { UIProvider } from "@/contexts/UIContext";
 import { ClerkProvider } from "@clerk/nextjs";
 import { QueryProvider } from "@/providers/query-provider";
 import { CartProvider } from "@/contexts/CartContext";
@@ -38,6 +39,7 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} ${_righteous} antialiased`}
         >
           <QueryProvider>
+            <UIProvider>
             <CartProvider>
               <UserProvider>
                 <ClerkTokenLogger />
@@ -46,6 +48,7 @@ export default function RootLayout({
                 <Footer/>
               </UserProvider>
             </CartProvider>
+            </UIProvider>
           </QueryProvider>
         </body>
       </html>
