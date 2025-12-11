@@ -4,9 +4,21 @@ import { useEffect, useState } from 'react'
 import { ProductCard } from './ProductCard'
 import { api } from '@/services/api'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-// --- DATOS DE RESPALDO (Por si el backend explota) ---
+const ProductSkeleton = () => (
+  <div className="w-full max-w-[365px] flex flex-col gap-3">
+    <div className="w-full aspect-video bg-gray-200 rounded-[12px] animate-pulse" />
+    <div className="h-4 w-1/3 bg-gray-200 rounded animate-pulse mt-2" />
+    <div className="h-6 w-3/4 bg-gray-200 rounded animate-pulse" />
+    <div className="h-2 w-full bg-gray-200 rounded animate-pulse" />
+    <div className="flex justify-between mt-4 items-center">
+        <div className="h-8 w-1/4 bg-gray-200 rounded animate-pulse" />
+        <div className="h-10 w-1/3 bg-gray-200 rounded-lg animate-pulse" />
+    </div>
+  </div>
+)
+
 const PRODUCTOS_RESPALDO: Product[] = [
   {
     id: 1,
@@ -49,21 +61,15 @@ export interface Product {
   impactoAmbiental: {
     huellaCarbono: string
     materialesReciclables: boolean
-    nivel: "Bajo impacto" | "Neutro" | "Medio impacto"
+    nivel: string
   }
   imagen: string
   certificaciones: string[]
 }
 
-// --- MAPPER INTELIGENTE (Backend -> Frontend) ---
 const mapBackendToFrontend = (bp: any): Product => {
-  let nivel: "Bajo impacto" | "Neutro" | "Medio impacto" = "Medio impacto";
-  const badge = bp.ecoBadge || 'medio_impacto';
-  
-  if (badge === "bajo_impacto") nivel = "Bajo impacto";
-  else if (badge === "neutro") nivel = "Neutro";
+  const nivel = bp.ecoBadge === 'bajo_impacto' ? "Bajo impacto" : bp.ecoBadge === 'neutro' ? "Neutro" : "Medio impacto";
 
-  // URL Segura para imagen
   const imgUrl = (bp.imagenUrl && bp.imagenUrl.startsWith('http')) 
     ? bp.imagenUrl 
     : "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?auto=format&fit=crop&w=500";
@@ -75,7 +81,6 @@ const mapBackendToFrontend = (bp: any): Product => {
     precio: bp.precio || 0,
     categoria: bp.categoria || 'Varios',
     impactoAmbiental: {
-      // Tu backend usa 'huellaCarbonoTotal', cubrimos ambos casos
       huellaCarbono: `${bp.huellaCarbonoTotal || bp.huellaCarbonoKg || 0} kg CO₂`,
       materialesReciclables: bp.porcentajeReciclable > 0,
       nivel: nivel
@@ -98,8 +103,6 @@ interface ProductListProps {
 export function ProductList({ filters }: ProductListProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  
-  // PAGINACIÓN 
   const [currentPage, setCurrentPage] = useState(0)
   const pageSize = 8
 
@@ -115,39 +118,28 @@ export function ProductList({ filters }: ProductListProps) {
       let rawProducts: Product[] = [];
 
       try {
-        console.log("📡 Conectando con Backend...");
-        
-        // Timeout de seguridad de 3 segundos
         const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error("Timeout")), 3000)
+            setTimeout(() => reject(new Error("Timeout")), 4000)
         );
 
-        // Pedimos TODOS (size=100) para filtrar en cliente si hace falta
         const apiCall = api.products.getAll(1, 100, filters);
         
         const data: any = await Promise.race([apiCall, timeoutPromise]);
         
-        // 🚨 AQUÍ ESTÁ LA CLAVE: Tu backend devuelve { productos: [...] }
         const listaBackend = data?.productos || data?.content || (Array.isArray(data) ? data : []);
         
-        if (listaBackend.length > 0) {
-            console.log("✅ Productos recibidos:", listaBackend.length);
+        if (listaBackend && listaBackend.length > 0) {
             rawProducts = listaBackend.map(mapBackendToFrontend);
         } else {
-            console.warn("Backend devolvió lista vacía");
-            // Si el backend responde pero vacío, no usamos respaldo (asumimos que no hay stock)
-            // A menos que quieras forzar respaldo siempre, descomenta abajo:
-            // throw new Error("Lista vacía"); 
+            throw new Error("Lista vacía"); 
         }
 
       } catch (err) {
-        console.warn("⚠️ Backend lento o caído. Activando MODO RESPALDO.", err);
         rawProducts = PRODUCTOS_RESPALDO;
       }
 
       if (!isMounted) return;
 
-      // --- FILTRADO EN CLIENTE ---
       const filtered = rawProducts.filter(p => {
            if (filters.categoria !== 'Todas' && p.categoria !== filters.categoria) return false;
            if (p.precio > filters.precioMax[0]) return false;
@@ -179,7 +171,13 @@ export function ProductList({ filters }: ProductListProps) {
   const handlePrevPage = () => { if (currentPage > 0) setCurrentPage(p => p - 1); };
   const handleNextPage = () => { if (currentPage < totalPages - 1) setCurrentPage(p => p + 1); };
 
-  if (loading) return <div className="flex justify-center py-32"><Loader2 className="h-10 w-10 animate-spin text-[#0F8354]"/></div>;
+  if (loading) {
+      return (
+        <div className="grid p-6 grid-cols-1 gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center pb-20">
+            {[...Array(8)].map((_, i) => <ProductSkeleton key={i} />)}
+        </div>
+      )
+  }
   
   if (products.length === 0) {
       return (
