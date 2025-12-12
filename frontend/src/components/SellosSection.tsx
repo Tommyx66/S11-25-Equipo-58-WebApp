@@ -10,17 +10,16 @@ export default function SellosSection() {
         <div className="mb-12 flex flex-col md:flex-row gap-6 md:gap-10 w-full justify-start">
           {/* PUNTITOS */}
           <div className="flex items-start pt-2 gap-2 shrink-0">
-            {[...Array(9)].map((_, i) => (
-              <div
-                key={i}
-                // CAMBIO: Reduje un poco el tamaño en mobile: h-[20px] w-[20px]
-                className="h-[20px] w-[20px] md:h-[25px] md:w-[25px] rounded-full"
-                style={{
-                  backgroundColor: `rgba(16, 185, 129, ${0.2 + i * 0.1})`,
-                }}
-              />
-            ))}
-          </div>
+  {[...Array(9)].map((_, i) => (
+    <div
+      key={i}
+      className="h-[20px] w-[20px] md:h-[25px] md:w-[25px] rounded-full"
+      style={{
+        backgroundColor: `rgba(15, 131, 84, ${0.1 + i * 0.11})`,
+      }}
+    />
+  ))}
+</div>
 
           {/* TEXTO */}
           <div>

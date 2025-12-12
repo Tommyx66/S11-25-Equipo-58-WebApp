@@ -3,7 +3,13 @@
 import React, { useEffect, useRef } from "react";
 import { Leaf, Globe, Droplets } from "lucide-react";
 import { Righteous, Inter } from "next/font/google";
-import { motion, useSpring, useTransform, useInView, Variants } from "framer-motion";
+import {
+  motion,
+  useSpring,
+  useTransform,
+  useInView,
+  Variants,
+} from "framer-motion";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const righteous = Righteous({
@@ -24,10 +30,10 @@ const containerVariants: Variants = {
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 50, damping: 20 }
+    transition: { type: "spring", stiffness: 50, damping: 20 },
   },
 };
 
@@ -37,17 +43,15 @@ export function SustainabilityMetrics() {
       className={`w-full bg-white px-6 py-12 md:py-20 lg:px-24 ${inter.variable} ${righteous.variable}`}
     >
       <div className="mx-auto max-w-7xl">
-        
         {/* === HEADER === */}
         <div className="mb-12 md:mb-16 flex flex-col md:flex-row gap-6 md:gap-10 items-start">
-          
           <div className="flex items-start pt-2 md:pt-4 gap-2 shrink-0">
             {[...Array(9)].map((_, i) => (
               <div
                 key={i}
                 className="h-[20px] w-[20px] md:h-[25px] md:w-[25px] rounded-full shrink-0"
                 style={{
-                  backgroundColor: `rgba(16, 185, 129, ${0.2 + i * 0.1})`,
+                  backgroundColor: `rgba(15, 131, 84, ${0.1 + i * 0.11})`,
                 }}
               />
             ))}
@@ -66,7 +70,7 @@ export function SustainabilityMetrics() {
         </div>
 
         {/* ───────────────── CARDS GRID ───────────────── */}
-        <motion.div 
+        <motion.div
           className="grid gap-8 grid-cols-1 lg:grid-cols-3 justify-items-center"
           variants={containerVariants}
           initial="hidden"
@@ -111,7 +115,7 @@ export function SustainabilityMetrics() {
         </motion.div>
 
         {/* BANNER INFERIOR */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

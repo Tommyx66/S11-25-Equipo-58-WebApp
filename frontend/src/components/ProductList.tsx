@@ -19,6 +19,52 @@ const ProductSkeleton = () => (
   </div>
 )
 
+const ProductSkeleton = () => (
+  <div className="w-full max-w-[365px] flex flex-col gap-3">
+    <div className="w-full aspect-video bg-gray-200 rounded-[12px] animate-pulse" />
+    <div className="h-4 w-1/3 bg-gray-200 rounded animate-pulse mt-2" />
+    <div className="h-6 w-3/4 bg-gray-200 rounded animate-pulse" />
+    <div className="h-2 w-full bg-gray-200 rounded animate-pulse" />
+    <div className="flex justify-between mt-4 items-center">
+        <div className="h-8 w-1/4 bg-gray-200 rounded animate-pulse" />
+        <div className="h-10 w-1/3 bg-gray-200 rounded-lg animate-pulse" />
+    </div>
+  </div>
+)
+
+const PRODUCTOS_RESPALDO: Product[] = [
+  {
+    id: 1,
+    nombre: "Botella Térmica EcoLife",
+    marca: "EcoLife",
+    precio: 14990,
+    categoria: "Hogar",
+    impactoAmbiental: { huellaCarbono: "0.8 kg CO₂", materialesReciclables: true, nivel: "Bajo impacto" },
+    imagen: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=500",
+    certificaciones: ["B-Corp"]
+  },
+  {
+    id: 2,
+    nombre: "Shampoo Sólido Natural",
+    marca: "Lush",
+    precio: 8500,
+    categoria: "Cuidado Personal",
+    impactoAmbiental: { huellaCarbono: "0.2 kg CO₂", materialesReciclables: true, nivel: "Bajo impacto" },
+    imagen: "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&w=500",
+    certificaciones: ["Cruelty Free"]
+  },
+  {
+    id: 3,
+    nombre: "Zapatillas Recicladas",
+    marca: "GreenTech",
+    precio: 89000,
+    categoria: "Ropa",
+    impactoAmbiental: { huellaCarbono: "5.5 kg CO₂", materialesReciclables: true, nivel: "Medio impacto" },
+    imagen: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=500",
+    certificaciones: ["Recycled"]
+  }
+];
+
 const PRODUCTOS_RESPALDO: Product[] = [
   {
     id: 1,
