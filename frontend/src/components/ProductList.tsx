@@ -35,10 +35,26 @@ export interface Product {
   certificaciones: string[]
 }
 
-// --- MAPPER ---
+// --- MAPPER ROBUSTO (Corrección Principal) ---
 const mapBackendToFrontend = (bp: any): Product => {
-  const nivel = bp.ecoBadge === 'bajo_impacto' ? "Bajo impacto" : bp.ecoBadge === 'neutro' ? "Neutro" : "Medio impacto";
-  const imgUrl = (bp.imagenUrl && bp.imagenUrl.startsWith('http')) ? bp.imagenUrl : "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?w=500";
+  // 1. Normalizamos el badge que viene del backend (evita errores de mayúsculas/minúsculas)
+  const rawBadge = (bp.ecoBadge || '').toLowerCase().trim();
+  
+  let nivel = "Medio impacto"; // Default
+
+  // 2. Lógica de asignación flexible
+  if (rawBadge === 'bajo_impacto' || rawBadge === 'low' || rawBadge.includes('bajo')) {
+      nivel = "Bajo impacto";
+  } else if (rawBadge === 'neutro' || rawBadge === 'neutral') {
+      nivel = "Neutro";
+  } else if (rawBadge === 'medio_impacto' || rawBadge === 'medium') {
+      nivel = "Medio impacto";
+  }
+
+  // 3. Fallback de imagen
+  const imgUrl = (bp.imagenUrl && bp.imagenUrl.startsWith('http')) 
+    ? bp.imagenUrl 
+    : "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?w=500";
 
   return {
     id: bp.productoId || bp.id,
@@ -76,40 +92,39 @@ export function ProductList({ filters }: ProductListProps) {
       let rawProducts: Product[] = [];
 
       try {
-        console.log("📡 Solicitando productos al backend...");
+        console.log("📡 Solicitando productos...");
         
         const data: any = await api.products.getAll(1, 100, filters);
         const listaBackend = data?.productos || data?.content || (Array.isArray(data) ? data : []);
         
         if (isMounted && Array.isArray(listaBackend)) {
+            // Mapeamos usando la función corregida
             rawProducts = listaBackend.map(mapBackendToFrontend);
         }
       } catch (err) {
         console.error("Error al obtener productos:", err);
-        // Ya no usamos respaldo, la lista quedará vacía si falla.
       }
 
       if (!isMounted) return;
 
-      // --- FILTRADO INTELIGENTE EN CLIENTE ---
+      // --- FILTRADO INTELIGENTE ---
       const filtered = rawProducts.filter(p => {
-           
-           // 1. FILTRO CATEGORÍA (Flexible: minúsculas y espacios)
+           // Categoría
            if (filters.categoria !== 'Todas') {
                const catProducto = (p.categoria || '').toLowerCase().trim();
                const catFiltro = filters.categoria.toLowerCase().trim();
-               if (catProducto !== catFiltro) return false;
+               if (!catProducto.includes(catFiltro)) return false; // Usamos includes para ser más flexibles
            }
 
-           // 2. FILTRO PRECIO
+           // Precio
            if (p.precio > filters.precioMax[0]) return false;
 
-           // 3. FILTRO MARCA
+           // Marca
            if (filters.marca !== 'all') {
                if (p.marca.toLowerCase() !== filters.marca.toLowerCase()) return false;
            }
 
-           // 4. FILTRO IMPACTO
+           // Impacto
            if (filters.impacto !== 'all') {
               const nivel = p.impactoAmbiental.nivel;
               if (filters.impacto === 'low' && nivel !== 'Bajo impacto') return false;
@@ -151,7 +166,7 @@ export function ProductList({ filters }: ProductListProps) {
       return (
         <div className="text-center py-20 text-gray-500 font-sans">
             <p className="text-xl font-medium mb-2">No encontramos productos con esos filtros.</p>
-            <p className="text-sm">Intenta seleccionar otra categoría o rango de precios.</p>
+            <p className="text-sm">Intenta ajustar tu búsqueda.</p>
         </div>
       )
   }
