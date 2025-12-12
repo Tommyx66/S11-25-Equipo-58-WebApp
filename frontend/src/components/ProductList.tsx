@@ -19,51 +19,11 @@ const ProductSkeleton = () => (
   </div>
 )
 
-const ProductSkeleton = () => (
-  <div className="w-full max-w-[365px] flex flex-col gap-3">
-    <div className="w-full aspect-video bg-gray-200 rounded-[12px] animate-pulse" />
-    <div className="h-4 w-1/3 bg-gray-200 rounded animate-pulse mt-2" />
-    <div className="h-6 w-3/4 bg-gray-200 rounded animate-pulse" />
-    <div className="h-2 w-full bg-gray-200 rounded animate-pulse" />
-    <div className="flex justify-between mt-4 items-center">
-        <div className="h-8 w-1/4 bg-gray-200 rounded animate-pulse" />
-        <div className="h-10 w-1/3 bg-gray-200 rounded-lg animate-pulse" />
-    </div>
-  </div>
-)
-
-const PRODUCTOS_RESPALDO: Product[] = [
-  {
-    id: 1,
-    nombre: "Botella Térmica EcoLife",
-    marca: "EcoLife",
-    precio: 14990,
-    categoria: "Hogar",
-    impactoAmbiental: { huellaCarbono: "0.8 kg CO₂", materialesReciclables: true, nivel: "Bajo impacto" },
-    imagen: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=500",
-    certificaciones: ["B-Corp"]
-  },
-  {
-    id: 2,
-    nombre: "Shampoo Sólido Natural",
-    marca: "Lush",
-    precio: 8500,
-    categoria: "Cuidado Personal",
-    impactoAmbiental: { huellaCarbono: "0.2 kg CO₂", materialesReciclables: true, nivel: "Bajo impacto" },
-    imagen: "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&w=500",
-    certificaciones: ["Cruelty Free"]
-  },
-  {
-    id: 3,
-    nombre: "Zapatillas Recicladas",
-    marca: "GreenTech",
-    precio: 89000,
-    categoria: "Ropa",
-    impactoAmbiental: { huellaCarbono: "5.5 kg CO₂", materialesReciclables: true, nivel: "Medio impacto" },
-    imagen: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=500",
-    certificaciones: ["Recycled"]
-  }
-];
+import { useEffect, useState } from 'react'
+import { ProductCard } from './ProductCard'
+import { api } from '@/services/api'
+import { Button } from '@/components/ui/button'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 const PRODUCTOS_RESPALDO: Product[] = [
   {
@@ -113,9 +73,11 @@ export interface Product {
   certificaciones: string[]
 }
 
+// --- MAPPER INTELIGENTE (Backend -> Frontend) ---
 const mapBackendToFrontend = (bp: any): Product => {
   const nivel = bp.ecoBadge === 'bajo_impacto' ? "Bajo impacto" : bp.ecoBadge === 'neutro' ? "Neutro" : "Medio impacto";
 
+  // URL Segura para imagen
   const imgUrl = (bp.imagenUrl && bp.imagenUrl.startsWith('http')) 
     ? bp.imagenUrl 
     : "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?auto=format&fit=crop&w=500";
@@ -164,10 +126,12 @@ export function ProductList({ filters }: ProductListProps) {
       let rawProducts: Product[] = [];
 
       try {
+        // Timeout de seguridad de 4 segundos
         const timeoutPromise = new Promise((_, reject) => 
             setTimeout(() => reject(new Error("Timeout")), 4000)
         );
 
+        // Pedimos TODOS (size=100) para filtrar en cliente si hace falta
         const apiCall = api.products.getAll(1, 100, filters);
         
         const data: any = await Promise.race([apiCall, timeoutPromise]);
@@ -177,15 +141,18 @@ export function ProductList({ filters }: ProductListProps) {
         if (listaBackend && listaBackend.length > 0) {
             rawProducts = listaBackend.map(mapBackendToFrontend);
         } else {
+            // Si viene vacío, lanzamos error para activar respaldo (opcional)
             throw new Error("Lista vacía"); 
         }
 
       } catch (err) {
+        // Si falla, usamos respaldo silenciosamente
         rawProducts = PRODUCTOS_RESPALDO;
       }
 
       if (!isMounted) return;
 
+      // --- FILTRADO EN CLIENTE ---
       const filtered = rawProducts.filter(p => {
            if (filters.categoria !== 'Todas' && p.categoria !== filters.categoria) return false;
            if (p.precio > filters.precioMax[0]) return false;
@@ -217,6 +184,7 @@ export function ProductList({ filters }: ProductListProps) {
   const handlePrevPage = () => { if (currentPage > 0) setCurrentPage(p => p - 1); };
   const handleNextPage = () => { if (currentPage < totalPages - 1) setCurrentPage(p => p + 1); };
 
+  // 🦴 SKELETON LOADING
   if (loading) {
       return (
         <div className="grid p-6 grid-cols-1 gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center pb-20">
