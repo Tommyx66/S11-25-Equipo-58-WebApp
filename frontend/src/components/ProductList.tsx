@@ -20,7 +20,7 @@ const ProductSkeleton = () => (
   </div>
 )
 
-// --- DATOS DE RESPALDO (Por si el backend explota) ---
+
 const PRODUCTOS_RESPALDO: Product[] = [
   {
     id: 1,
