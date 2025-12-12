@@ -6,7 +6,6 @@ import { api } from '@/services/api'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-// --- SKELETON (Tarjeta Gris de Carga) ---
 const ProductSkeleton = () => (
   <div className="w-full max-w-[365px] flex flex-col gap-3">
     <div className="w-full aspect-video bg-gray-200 rounded-[12px] animate-pulse" />
@@ -20,6 +19,11 @@ const ProductSkeleton = () => (
   </div>
 )
 
+import { useEffect, useState } from 'react'
+import { ProductCard } from './ProductCard'
+import { api } from '@/services/api'
+import { Button } from '@/components/ui/button'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 const PRODUCTOS_RESPALDO: Product[] = [
   {
