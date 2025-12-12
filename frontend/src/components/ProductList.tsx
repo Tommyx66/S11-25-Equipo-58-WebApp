@@ -35,14 +35,11 @@ export interface Product {
   certificaciones: string[]
 }
 
-// --- MAPPER ROBUSTO (Corrección Principal) ---
 const mapBackendToFrontend = (bp: any): Product => {
-  // 1. Normalizamos el badge que viene del backend (evita errores de mayúsculas/minúsculas)
   const rawBadge = (bp.ecoBadge || '').toLowerCase().trim();
   
-  let nivel = "Medio impacto"; // Default
+  let nivel = "Medio impacto"; 
 
-  // 2. Lógica de asignación flexible
   if (rawBadge === 'bajo_impacto' || rawBadge === 'low' || rawBadge.includes('bajo')) {
       nivel = "Bajo impacto";
   } else if (rawBadge === 'neutro' || rawBadge === 'neutral') {
@@ -51,7 +48,6 @@ const mapBackendToFrontend = (bp: any): Product => {
       nivel = "Medio impacto";
   }
 
-  // 3. Fallback de imagen
   const imgUrl = (bp.imagenUrl && bp.imagenUrl.startsWith('http')) 
     ? bp.imagenUrl 
     : "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?w=500";
