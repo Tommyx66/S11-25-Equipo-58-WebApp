@@ -148,6 +148,7 @@ export function ProductDetailModal() {
               </div>
            </div>
 
+           {/* Footer Buttons (Siempre visible abajo) */}
            <div className="p-5 border-t border-gray-100 flex gap-3 bg-white shrink-0 z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.02)]">
               <Button onClick={handleAddToCart} className="flex-1 py-4 h-auto bg-[#0F8354] hover:bg-[#0a633e] text-white text-base font-righteous rounded-lg shadow-md active:scale-95 transition-transform flex items-center justify-center">
                 <ShoppingCart className="w-4 h-4 mr-2" /> Añadir al carrito

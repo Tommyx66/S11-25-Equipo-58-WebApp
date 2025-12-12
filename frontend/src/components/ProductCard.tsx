@@ -117,7 +117,7 @@ export function ProductCard({ product }: ProductCardProps) {
               addToCart(product);
             }}
           >
-            <Image src="/icons/shopping-cart.svg" alt="Cart" width={20} height={20} className="mr-2 invert"/>
+            <Image src="/icons/shopping-cart.svg" alt="Cart" width={20} height={20} className="mr-2 "/>
             Añadir
           </Button>
         </div>
