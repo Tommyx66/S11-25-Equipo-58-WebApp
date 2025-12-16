@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./docs/logo.png" alt="EcoShop Logo" width="250"/>
+  <img src="./frontend/docs/logo.png" alt="EcoShop Logo" width="250"/>
   <h1>EcoShop - Frontend</h1>
   
   <p>
@@ -31,27 +31,27 @@ Una interfaz limpia diseñada para educar y vender responsablemente.
 
 | **Home & Propuesta de Valor** | **Métricas de Impacto Global** |
 |:---:|:---:|
-| ![Home](./docs/hero.png) | ![Métricas](./docs/metrics.png) |
+| ![Home](./frontend/docs/hero.png) | ![Métricas](./frontend/docs/metrics.png) |
 
 | **Educación Ambiental** | **Carrusel Destacado** |
 |:---:|:---:|
-| ![Educación](./docs/educacion.png) | ![Carrusel](./docs/carrusel.png) |
+| ![Educación](./frontend/docs/educacion.png) | ![Carrusel](./frontend/docs/carrusel.png) |
 
 ### 🛒 Flujo de Compra Sostenible
 
 **1. Catálogo Inteligente:** Filtros por categoría, precio y **Nivel de Impacto**.
-![Catálogo](./docs/catalogo.png)
+![Catálogo](./frontend/docs/catalogo.png)
 
 **2. Transparencia Total:** Cada producto muestra su huella de CO₂, agua y trazabilidad.
-![Detalle](./docs/detalle.png)
+![Detalle](./frontend/docs/detalle.png)
 
 **3. Checkout & Recompensas:** Proceso de pago fluido con feedback inmediato.
 | **Formulario de Envío** | **Pago Exitoso & Eco-Puntos** |
 |:---:|:---:|
-| ![Formulario](./docs/checkout_form.png) | ![Exito](./docs/checkout_success.png) |
+| ![Formulario](./frontend/docs/checkout_form.png) | ![Exito](./frontend/docs/checkout_success.png) |
 
 **4. Tu Huella Personal:** Dashboard para visualizar tus logros ecológicos.
-![Dashboard](./docs/dashboard.png)
+![Dashboard](./frontend/docs/dashboard.png)
 
 ---
 

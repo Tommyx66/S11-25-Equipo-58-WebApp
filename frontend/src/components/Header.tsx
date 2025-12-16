@@ -51,9 +51,6 @@ export default function Header() {
 
   return (
     <>
-      {/* ❌ ELIMINADO <AuthModal /> 
-          Ya está en UIProvider, no lo pongas aquí o se duplicará.
-      */}
       <ImpactModal />
       <CheckoutModal />
       <ProductDetailModal />
