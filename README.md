@@ -207,3 +207,6 @@ feature/nombre-tarea: Ramas temporales para cada nueva funcionalidad (se crean d
 ⚠️ Regla de Oro: Todo cambio hacia develop se realiza mediante Pull Request (PR) y requiere la aprobación de al menos un compañero antes de fusionarse.
 
 <div align="center"> <sub>Hecho con 💚 por el <b>Equipo 58</b> para <b>NoCountry</b></sub> </div>
+﻿# Proyecto e-shop
+
+# ecoshop-nocountry
