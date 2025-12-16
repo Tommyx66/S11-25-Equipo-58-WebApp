@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
@@ -87,10 +87,7 @@ const CarouselSkeleton = () => (
 
 // --- UTILS & COMPONENTS ---
 interface AnimatedStatProps {
-  value: number;
-  suffix: string;
-  label: string;
-  decimals?: number;
+  value: number; suffix: string; label: string; decimals?: number;
 }
 
 const AnimatedStat = ({
@@ -104,23 +101,14 @@ const AnimatedStat = ({
   const spring = useSpring(0, { bounce: 0, duration: 2000 });
   const display = useTransform(spring, (current) => current.toFixed(decimals));
 
-  useEffect(() => {
-    if (isInView) spring.set(value);
-  }, [isInView, value, spring]);
+  useEffect(() => { if (isInView) spring.set(value); }, [isInView, value, spring]);
 
   return (
     <div ref={ref} className="flex flex-col items-center p-4 group">
-      <div
-        className={`${righteous.className} text-4xl md:text-5xl text-[#0F8354] flex items-baseline transition-transform group-hover:scale-110 duration-300`}
-      >
-        <motion.span>{display}</motion.span>
-        <span className="ml-1 text-3xl md:text-4xl">{suffix}</span>
+      <div className={`${righteous.className} text-4xl md:text-5xl text-[#0F8354] flex items-baseline transition-transform group-hover:scale-110 duration-300`}>
+        <motion.span>{display}</motion.span><span className="ml-1 text-3xl md:text-4xl">{suffix}</span>
       </div>
-      <span
-        className={`text-gray-500 text-sm md:text-base mt-2 font-medium ${inter.className}`}
-      >
-        {label}
-      </span>
+      <span className={`text-gray-500 text-sm md:text-base mt-2 font-medium ${inter.className}`}>{label}</span>
     </div>
   );
 };
@@ -292,9 +280,7 @@ export function LowImpactCarousel() {
   const { display, originalProduct } = currentItem;
 
   return (
-    <section
-      className={`w-full bg-white py-8 md:py-16 overflow-hidden ${inter.variable} ${righteous.variable}`}
-    >
+    <section className={`w-full bg-white py-8 md:py-16 overflow-hidden ${inter.variable} ${righteous.variable}`}>
       <div className="container mx-auto px-4 xl:px-0">
         {/* HEADER */}
         <div className="mb-8 md:mb-12 flex flex-col md:flex-row gap-4 md:gap-10 items-start md:pl-10">
@@ -314,8 +300,7 @@ export function LowImpactCarousel() {
               Productos con <span className="text-[#0F8354]">Menor Huella</span>
             </h2>
             <p className="max-w-4xl text-lg md:text-2xl text-gray-600 font-sans text-pretty font-regular">
-              Descubre nuestra selección curada de productos diseñados para un
-              futuro sostenible.
+              Descubre nuestra selección curada de productos diseñados para un futuro sostenible.
             </p>
           </div>
         </div>
@@ -427,6 +412,7 @@ export function LowImpactCarousel() {
                       </Button>
                     </div>
                   </motion.div>
+
                 </motion.div>
               </div>
             </motion.div>
@@ -452,16 +438,7 @@ export function LowImpactCarousel() {
         {/* DOTS */}
         <div className="flex justify-center gap-3 mt-6 md:mt-8 z-20">
           {products.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => goToSlide(idx)}
-              className={`h-2.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] ${
-                idx === currentIndex
-                  ? "bg-[#0F8354] w-8"
-                  : "bg-gray-300 w-2.5 hover:bg-[#0F8354]/60"
-              }`}
-              aria-label={`Ir a diapositiva ${idx + 1}`}
-            />
+            <button key={idx} onClick={() => goToSlide(idx)} className={`h-2.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] ${idx === currentIndex ? "bg-[#0F8354] w-8" : "bg-gray-300 w-2.5 hover:bg-[#0F8354]/60"}`} aria-label={`Ir a diapositiva ${idx + 1}`} />
           ))}
         </div>
 
