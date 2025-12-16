@@ -25,6 +25,66 @@ const righteous = Righteous({
   variable: "--font-righteous",
 });
 
+// --- SKELETON PARA EL CARRUSEL ---
+const CarouselSkeleton = () => (
+  <section className={`w-full bg-white py-8 md:py-16 overflow-hidden ${inter.variable} ${righteous.variable}`}>
+    <div className="container mx-auto px-4 xl:px-0">
+      
+      {/* HEADER SKELETON */}
+      <div className="mb-8 md:mb-12 flex flex-col md:flex-row gap-4 md:gap-10 items-start md:pl-10 animate-pulse">
+        <div className="flex items-center pt-2 gap-2 shrink-0">
+           {[...Array(9)].map((_, i) => (
+             <div key={i} className="h-[20px] w-[20px] md:h-[25px] md:w-[25px] rounded-full bg-gray-200" />
+           ))}
+        </div>
+        <div className="w-full max-w-3xl space-y-4">
+           {/* Título */}
+           <div className="h-10 md:h-14 w-3/4 bg-gray-200 rounded-lg" />
+           {/* Subtítulo */}
+           <div className="h-6 md:h-8 w-1/2 bg-gray-200 rounded-lg" />
+        </div>
+      </div>
+
+      {/* BANNER GIGANTE skeleton */}
+      <div className="relative w-full h-[500px] md:h-[550px] lg:h-[560px] rounded-[24px] md:rounded-[32px] bg-gray-100 overflow-hidden shadow-sm animate-pulse">
+        <div className="absolute inset-0 flex flex-col justify-end pb-14 md:pb-20 lg:pb-16 px-6 md:px-12 lg:px-28 space-y-6">
+           
+           {/* Tags */}
+           <div className="flex gap-3">
+             <div className="h-8 w-24 bg-gray-300 rounded-full" />
+             <div className="h-8 w-32 bg-gray-300 rounded-full" />
+           </div>
+
+           {/* Título Producto */}
+           <div className="h-12 md:h-16 w-3/4 max-w-lg bg-gray-300 rounded-xl" />
+           
+           {/* Descripción */}
+           <div className="h-6 w-1/2 max-w-md bg-gray-300 rounded-lg" />
+
+           {/* Botones y Precio */}
+           <div className="pt-4 flex flex-col xl:flex-row gap-6 items-start xl:items-center">
+              <div className="h-12 w-32 bg-gray-300 rounded-lg" /> {/* Precio */}
+              <div className="flex gap-4">
+                 <div className="h-14 w-48 bg-gray-300 rounded-xl" /> {/* Botón 1 */}
+                 <div className="h-14 w-48 bg-gray-300 rounded-xl" /> {/* Botón 2 */}
+              </div>
+           </div>
+        </div>
+      </div>
+
+      {/* STATS SKELETON */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 pt-8 border-t border-gray-100 animate-pulse">
+         {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex flex-col items-center gap-3">
+               <div className="h-10 w-24 bg-gray-200 rounded" />
+               <div className="h-4 w-40 bg-gray-200 rounded" />
+            </div>
+         ))}
+      </div>
+    </div>
+  </section>
+);
+
 // --- UTILS & COMPONENTS ---
 interface AnimatedStatProps {
   value: number; suffix: string; label: string; decimals?: number;
@@ -88,7 +148,6 @@ const textItemVariants: Variants = {
   },
 };
 
-// --- MAPPER EXACTO PARA TU JSON ---
 const mapToCarouselItem = (p: any) => {
   // Detectar badges
   let displayBadges = p.certificaciones || [];
@@ -115,18 +174,17 @@ const mapToCarouselItem = (p: any) => {
       name: p.nombre,
       description: p.descripcion,
       price: p.precio,
-      // Usamos huellaCarbonoTotal del JSON
       co2: `${p.huellaCarbonoTotal || 0} kg CO₂`,
       badges: displayBadges,
       image: safeImage,
     },
-    // Objeto completo para el carrito/modal
+    // Objeto completo para el carrito
     originalProduct: {
       id: p.productoId,
       nombre: p.nombre,
       marca: p.nombreMarca || "EcoShop",
       precio: p.precio,
-      categoria: "Varios", // El JSON no trae categoría, ponemos default
+      categoria: "Varios", 
       impactoAmbiental: {
         huellaCarbono: `${p.huellaCarbonoTotal || 0} kg CO₂`,
         materialesReciclables: p.porcentajeReciclable > 0,
@@ -147,13 +205,16 @@ export function LowImpactCarousel() {
   const [[currentIndex, direction], setCurrentIndex] = useState([0, 0]);
   const [isPaused, setIsPaused] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // ✅ ESTADO DE CARGA 
+  const [loading, setLoading] = useState(true);
 
   // --- CARGA DE DATOS ---
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true); // Iniciamos carga
       try {
         const data: any = await api.products.getAll(1, 6, { impacto: "low" });
-
         const content = data?.productos || [];
 
         if (content.length > 0) {
@@ -162,6 +223,8 @@ export function LowImpactCarousel() {
         }
       } catch (e) {
         console.error("Error cargando carrusel:", e);
+      } finally {
+        setLoading(false); // Terminamos carga 
       }
     };
     fetchProducts();
@@ -204,7 +267,10 @@ export function LowImpactCarousel() {
     setIsPaused(false);
   };
 
-  // Si no hay productos, no renderizamos nada (o podrías poner un skeleton)
+  if (loading) {
+     return <CarouselSkeleton />;
+  }
+
   if (products.length === 0) return null;
 
   const currentItem = products[currentIndex];
@@ -267,7 +333,6 @@ export function LowImpactCarousel() {
                 className="object-cover"
                 priority={true}
                 sizes="(max-width: 768px) 100vw, 85vw"
-                // Añadimos unloader por si ibb.co da problemas de CORS
                 unoptimized={display.image.includes("ibb.co")}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-90" />
