@@ -58,8 +58,7 @@ export default function HuellaSection() {
               Entiende tu Huella y Aprende
             </h2>
             <p className="max-w-4xl text-lg md:text-2xl font-sans text-gray-600 text-pretty">
-              De kilogramos a kilómetros: Aprende a interpretar las métricas
-              ambientales y tomar decisiones informadas.
+              De kilogramos a kilómetros: Aprende a interpretar las métricas ambientales y tomar decisiones informadas.
             </p>
           </div>
         </div>
@@ -68,10 +67,7 @@ export default function HuellaSection() {
           {/* COLUMNA DE CARDS */}
           <motion.div
             className="flex flex-col gap-6 w-full max-w-[900px]"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}
           >
             {/* CARD 1 */}
             <motion.div
@@ -84,28 +80,11 @@ export default function HuellaSection() {
                 </div>
               </div>
               <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-                <div className="shrink-0">
-                  <Image
-                    src="/huella1-image.svg"
-                    width={100}
-                    height={100}
-                    alt="Huella Verde"
-                    className="h-28 w-28 md:h-32 md:w-32 object-contain"
-                  />
-                </div>
+                <div className="shrink-0"><Image src="/huella1-image.svg" width={100} height={100} alt="Huella Verde" className="h-28 w-28 md:h-32 md:w-32 object-contain" /></div>
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="mb-2 text-2xl font-righteous text-[#1A1A1B]">
-                    ¿Qué es la huella de carbono?
-                  </h3>
-                  <p className="mb-4 text-gray-600 font-sans text-base md:text-lg text-pretty">
-                    Es la cantidad total de gases de efecto invernadero emitidos
-                    durante el ciclo de vida de un producto.
-                  </p>
-                  <div className="inline-block rounded-full bg-[#0F83541A] px-4 py-1">
-                    <span className="text-sm font-bold text-[#0F8354]">
-                      2.3kg CO₂ promedio
-                    </span>
-                  </div>
+                  <h3 className="mb-2 text-2xl font-righteous text-[#1A1A1B]">¿Qué es la huella de carbono?</h3>
+                  <p className="mb-4 text-gray-600 font-sans text-base md:text-lg text-pretty">Es la cantidad total de gases de efecto invernadero emitidos durante el ciclo de vida de un producto.</p>
+                  <div className="inline-block rounded-full bg-[#0F83541A] px-4 py-1"><span className="text-sm font-bold text-[#0F8354]">2.3kg CO₂ promedio</span></div>
                 </div>
               </div>
             </motion.div>
@@ -187,13 +166,7 @@ export default function HuellaSection() {
 
           <div className="flex flex-col items-center justify-center w-full max-w-[600px] relative mt-10 xl:mt-0">
             <div className="relative w-full">
-              <Image
-                src="/huella-foot.png"
-                width={846}
-                height={546}
-                alt="Huella de carbono verde"
-                className="h-auto w-full lg:-mt-4 object-contain drop-shadow-lg"
-              />
+              <Image src="/huella-foot.png" width={846} height={546} alt="Huella de carbono verde" className="h-auto w-full lg:-mt-4 object-contain drop-shadow-lg" />
             </div>
 
             <div className="mt-8 md:-mt-8 lg:-mt-12 relative z-10">

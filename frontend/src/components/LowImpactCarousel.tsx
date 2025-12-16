@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
@@ -54,21 +54,21 @@ const CarouselSkeleton = () => (
 
 // --- ANIMATED STATS ---
 interface AnimatedStatProps {
-  value: number;
-  suffix: string;
-  label: string;
-  decimals?: number;
+  value: number; suffix: string; label: string; decimals?: number;
 }
 
-const AnimatedStat = ({ value, suffix, label, decimals = 0 }: AnimatedStatProps) => {
+const AnimatedStat = ({
+  value,
+  suffix,
+  label,
+  decimals = 0,
+}: AnimatedStatProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const spring = useSpring(0, { bounce: 0, duration: 2500 });
   const display = useTransform(spring, (current) => current.toFixed(decimals));
 
-  useEffect(() => {
-    if (isInView) spring.set(value);
-  }, [isInView, value, spring]);
+  useEffect(() => { if (isInView) spring.set(value); }, [isInView, value, spring]);
 
   return (
     <div ref={ref} className="flex flex-col items-center p-6 md:p-8 group cursor-default transition-all duration-300 hover:bg-gray-50/80 rounded-2xl">
