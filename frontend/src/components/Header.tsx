@@ -9,7 +9,6 @@ import { useUserData } from '@/contexts/UserContext'
 import { useUI } from '@/contexts/UIContext'
 import clsx from 'clsx'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import { AuthModal } from './AuthModal'
 import { ImpactModal } from './ImpactModal'
 import { CheckoutModal } from './CheckoutModal'
 import { ProductDetailModal } from './ProductDetailModal'
@@ -52,7 +51,6 @@ export default function Header() {
 
   return (
     <>
-     
       <ImpactModal />
       <CheckoutModal />
       <ProductDetailModal />
