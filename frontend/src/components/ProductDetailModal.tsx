@@ -9,7 +9,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import clsx from 'clsx'
 
-// --- UI HELPERS ---
 
 const TabButton = ({ active, label, onClick }: any) => (
   <button onClick={onClick} className={clsx("flex-1 py-2 text-sm font-sans relative transition-all duration-200", active ? "text-[#1A1A1B] font-bold bg-white rounded-[10px] shadow-sm" : "text-[#707070] hover:text-[#1A1A1B]")}>
@@ -64,8 +63,11 @@ export function ProductDetailModal() {
   ]
 
   const handleAddToCart = () => { addToCart(selectedProduct); closeProductModal(); }
-  const handleBuyNow = () => { addToCart(selectedProduct); closeProductModal(); setTimeout(()=>openCheckout(), 300); }
-
+const handleBuyNow = () => { 
+      addToCart(selectedProduct, false); 
+      closeProductModal(); 
+      setTimeout(() => openCheckout(), 300); 
+  }
   const safeImage = selectedProduct.imagen && selectedProduct.imagen.startsWith('http') 
     ? selectedProduct.imagen 
     : "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?auto=format&fit=crop&w=800";
@@ -80,7 +82,7 @@ export function ProductDetailModal() {
         onClick={(e) => e.stopPropagation()}
       >
         
-        {/* BOTÓN CERRAR FLOTANTE (Arreglado z-index) */}
+        {/* BOTÓN CERRAR FLOTANTE */}
         <button 
             onClick={closeProductModal} 
             className="absolute right-3 top-3 z-50 p-2 bg-white/90 hover:bg-white rounded-full shadow-md text-[#1A1A1B] transition-all hover:scale-110 cursor-pointer border border-gray-100"
@@ -88,7 +90,7 @@ export function ProductDetailModal() {
            <X size={20} />
         </button>
 
-        {/* COLUMNA IZQ: IMAGEN (Oculta en móviles muy chicos si es necesario, o visible arriba) */}
+        {/* COLUMNA IZQ: IMAGEN */}
         <div className="hidden md:flex w-[45%] bg-[#FAFAFA] p-6 flex-col justify-center border-r border-gray-100 h-full">
            <div className="relative aspect-square w-full rounded-[15px] overflow-hidden shadow-sm border border-white bg-white mb-4 group">
              <Image src={safeImage} alt={selectedProduct.nombre} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -99,17 +101,17 @@ export function ProductDetailModal() {
            </div>
         </div>
 
-        {/* COLUMNA DER: INFO (Flexible) */}
+        {/* COLUMNA DER: INFO  */}
         <div className="w-full md:w-[55%] flex flex-col bg-white h-full max-h-[90vh]">
            
-           {/* Header Info (No scroll) */}
+           {/* Header Info  */}
            <div className="pt-6 px-6 pb-2 shrink-0">
               <span className="text-[#707070] text-[10px] font-bold tracking-[0.2em] uppercase mb-1 block opacity-60">{selectedProduct.marca}</span>
               <h1 className="text-2xl md:text-3xl font-sans font-medium text-[#1A1A1B] leading-tight mb-1">{selectedProduct.nombre}</h1>
               <p className="text-[#0F8354] text-2xl font-sans font-bold tracking-tight">${selectedProduct.precio.toLocaleString()}</p>
            </div>
 
-           {/* Tabs + Contenido (Scrollable) */}
+           {/* Tabs + Contenido  */}
            <div className="px-6 mt-2 flex-1 overflow-hidden flex flex-col min-h-0">
               <div className="bg-[#F0F0F0] p-1 rounded-[12px] flex gap-1 mb-3 shrink-0">
                  <TabButton active={activeTab === 'impacto'} label="Impacto" onClick={() => setActiveTab('impacto')} />
@@ -148,7 +150,7 @@ export function ProductDetailModal() {
               </div>
            </div>
 
-           {/* Footer Buttons (Siempre visible abajo) */}
+           {/* Footer Buttons */}
            <div className="p-5 border-t border-gray-100 flex gap-3 bg-white shrink-0 z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.02)]">
               <Button onClick={handleAddToCart} className="flex-1 py-4 h-auto bg-[#0F8354] hover:bg-[#0a633e] text-white text-base font-righteous rounded-lg shadow-md active:scale-95 transition-transform flex items-center justify-center">
                 <ShoppingCart className="w-4 h-4 mr-2" /> Añadir al carrito

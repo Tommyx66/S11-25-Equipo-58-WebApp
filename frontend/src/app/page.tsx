@@ -19,8 +19,14 @@ export default function Home() {
     precioMax: [200000], 
     impacto: 'all',
     marca: 'all',
-    ordenar: 'relevant'
+    ordenar: 'relevant',
+    material: 'all',
+    origen: 'all'
   })
+
+  // ✅ ESTADOS PARA DATOS DINÁMICOS
+  const [availableBrands, setAvailableBrands] = useState<string[]>([])
+  const [availableMaterials, setAvailableMaterials] = useState<string[]>([])
 
   const handleSetFilter = (key: string, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value }))
@@ -32,8 +38,19 @@ export default function Home() {
       precioMax: [200000],
       impacto: 'all',
       marca: 'all',
-      ordenar: 'relevant'
+      ordenar: 'relevant',
+      material: 'all',
+      origen: 'all'
     })
+  }
+
+  const handleDataLoaded = (brands: string[], materials: string[]) => {
+    if (brands.length > 0 && availableBrands.length === 0) {
+        setAvailableBrands(brands);
+    }
+    if (materials.length > 0 && availableMaterials.length === 0) {
+        setAvailableMaterials(materials);
+    }
   }
 
   return (
@@ -53,13 +70,18 @@ export default function Home() {
       
       <div className="container mx-auto px-4 py-8">
         <section id="productos" className="scroll">
-           {/* Controles de Filtro */}
            <ProductFilters 
               filters={filters} 
               setFilter={handleSetFilter} 
               resetFilters={resetFilters} 
+              availableBrands={availableBrands}
+              availableMaterials={availableMaterials}
            />
-                      <ProductList filters={filters} />
+           
+           <ProductList 
+              filters={filters} 
+              onDataLoaded={handleDataLoaded}
+           />
         </section>
 
         <section id="aprende" className="scroll">

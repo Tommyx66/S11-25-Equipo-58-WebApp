@@ -14,7 +14,7 @@ export interface CartItem extends Product {
 interface CartContextType {
   cartItems: CartItem[]
   isOpen: boolean
-  addToCart: (product: Product) => Promise<void>
+  addToCart: (product: Product, openSidebar?: boolean) => Promise<void>
   removeFromCart: (productId: number) => Promise<void>
   updateQuantity: (productId: number, quantity: number) => Promise<void>
   clearCart: () => Promise<void>
@@ -34,7 +34,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
 
-  // 1. CARGA INICIAL 
   useEffect(() => {
     if (!isLoaded) return; 
 
@@ -56,7 +55,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 imagen: item.imagenUrl,
                 certificaciones: [],
                 categoria: "",
-                quantity: item.cantidad
+                quantity: item.cantidad,
+                // ✅ CORRECCIÓN APLICADA AQUÍ:
+                material: "polyester", // Valor por defecto para pasar el build
+                origen: "international" // Valor por defecto para pasar el build
               }))
               setCartItems(mappedItems)
             }
@@ -83,7 +85,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     loadCart()
   }, [isSignedIn, isLoaded, getToken])
 
-  // 2. GUARDAR CAMBIOS 
   useEffect(() => {
     if (!isInitialized) return; 
 
@@ -93,14 +94,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [cartItems, isInitialized, isSignedIn])
 
   // --- ACTIONS ---
-  
-  const addToCart = async (product: Product) => {
+
+  const addToCart = async (product: Product, openSidebar = true) => {
     setCartItems((prev) => {
       const existing = prev.find((i) => i.id === product.id)
       if (existing) return prev.map((i) => i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i)
       return [...prev, { ...product, quantity: 1 }]
     })
-    setIsOpen(true)
+    
+    if (openSidebar) {
+        setIsOpen(true)
+    }
 
     if (isSignedIn) {
       try {
