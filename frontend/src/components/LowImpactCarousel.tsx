@@ -17,6 +17,7 @@ import { api } from "@/services/api";
 import { useCart } from "@/contexts/CartContext";
 import { useUI } from "@/contexts/UIContext";
 import type { Product } from "./ProductList";
+import clsx from "clsx";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const righteous = Righteous({
@@ -25,67 +26,33 @@ const righteous = Righteous({
   variable: "--font-righteous",
 });
 
-// --- SKELETON PARA EL CARRUSEL ---
+// --- SKELETON ---
 const CarouselSkeleton = () => (
-  <section className={`w-full bg-white py-8 md:py-16 overflow-hidden ${inter.variable} ${righteous.variable}`}>
+  <section className={`w-full bg-white py-12 md:py-20 overflow-hidden ${inter.variable} ${righteous.variable}`}>
     <div className="container mx-auto px-4 xl:px-0">
-      
-      {/* HEADER SKELETON */}
-      <div className="mb-8 md:mb-12 flex flex-col md:flex-row gap-4 md:gap-10 items-start md:pl-10 animate-pulse">
-        <div className="flex items-center pt-2 gap-2 shrink-0">
+      <div className="mb-10 flex flex-col md:flex-row gap-6 items-start md:pl-6 animate-pulse">
+        <div className="flex items-center gap-2 shrink-0">
            {[...Array(9)].map((_, i) => (
-             <div key={i} className="h-[20px] w-[20px] md:h-[25px] md:w-[25px] rounded-full bg-gray-200" />
+             <div key={i} className="h-5 w-5 rounded-full bg-gray-200" />
            ))}
         </div>
-        <div className="w-full max-w-3xl space-y-4">
-           {/* Título */}
-           <div className="h-10 md:h-14 w-3/4 bg-gray-200 rounded-lg" />
-           {/* Subtítulo */}
-           <div className="h-6 md:h-8 w-1/2 bg-gray-200 rounded-lg" />
+        <div className="w-full space-y-4">
+           <div className="h-10 md:h-12 w-3/4 max-w-xl bg-gray-200 rounded-xl" />
+           <div className="h-6 md:h-8 w-1/2 max-w-md bg-gray-200 rounded-lg" />
         </div>
       </div>
-
-      {/* BANNER GIGANTE skeleton */}
-      <div className="relative w-full h-[500px] md:h-[550px] lg:h-[560px] rounded-[24px] md:rounded-[32px] bg-gray-100 overflow-hidden shadow-sm animate-pulse">
-        <div className="absolute inset-0 flex flex-col justify-end pb-14 md:pb-20 lg:pb-16 px-6 md:px-12 lg:px-28 space-y-6">
-           
-           {/* Tags */}
-           <div className="flex gap-3">
-             <div className="h-8 w-24 bg-gray-300 rounded-full" />
-             <div className="h-8 w-32 bg-gray-300 rounded-full" />
-           </div>
-
-           {/* Título Producto */}
-           <div className="h-12 md:h-16 w-3/4 max-w-lg bg-gray-300 rounded-xl" />
-           
-           {/* Descripción */}
-           <div className="h-6 w-1/2 max-w-md bg-gray-300 rounded-lg" />
-
-           {/* Botones y Precio */}
-           <div className="pt-4 flex flex-col xl:flex-row gap-6 items-start xl:items-center">
-              <div className="h-12 w-32 bg-gray-300 rounded-lg" /> {/* Precio */}
-              <div className="flex gap-4">
-                 <div className="h-14 w-48 bg-gray-300 rounded-xl" /> {/* Botón 1 */}
-                 <div className="h-14 w-48 bg-gray-300 rounded-xl" /> {/* Botón 2 */}
-              </div>
-           </div>
+      <div className="relative w-full h-[720px] md:h-[600px] rounded-[32px] md:rounded-[40px] bg-gray-100 overflow-hidden shadow-sm animate-pulse">
+        <div className="absolute inset-0 flex flex-col justify-end pb-12 px-8 space-y-6">
+           <div className="h-10 w-2/3 bg-gray-300 rounded-2xl" />
+           <div className="h-6 w-full max-w-sm bg-gray-300 rounded-lg" />
+           <div className="h-14 w-full md:w-64 bg-gray-300 rounded-2xl" />
         </div>
-      </div>
-
-      {/* STATS SKELETON */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 pt-8 border-t border-gray-100 animate-pulse">
-         {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex flex-col items-center gap-3">
-               <div className="h-10 w-24 bg-gray-200 rounded" />
-               <div className="h-4 w-40 bg-gray-200 rounded" />
-            </div>
-         ))}
       </div>
     </div>
   </section>
 );
 
-// --- UTILS & COMPONENTS ---
+// --- ANIMATED STATS ---
 interface AnimatedStatProps {
   value: number; suffix: string; label: string; decimals?: number;
 }
@@ -98,36 +65,40 @@ const AnimatedStat = ({
 }: AnimatedStatProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const spring = useSpring(0, { bounce: 0, duration: 2000 });
+  const spring = useSpring(0, { bounce: 0, duration: 2500 });
   const display = useTransform(spring, (current) => current.toFixed(decimals));
 
   useEffect(() => { if (isInView) spring.set(value); }, [isInView, value, spring]);
 
   return (
-    <div ref={ref} className="flex flex-col items-center p-4 group">
-      <div className={`${righteous.className} text-4xl md:text-5xl text-[#0F8354] flex items-baseline transition-transform group-hover:scale-110 duration-300`}>
-        <motion.span>{display}</motion.span><span className="ml-1 text-3xl md:text-4xl">{suffix}</span>
+    <div ref={ref} className="flex flex-col items-center p-6 md:p-8 group cursor-default transition-all duration-300 hover:bg-gray-50/80 rounded-2xl">
+      <div className={`${righteous.className} text-4xl md:text-5xl lg:text-6xl text-[#0F8354] flex items-baseline transition-transform group-hover:scale-105 duration-500`}>
+        <motion.span>{display}</motion.span>
+        <span className="ml-1 text-2xl md:text-3xl lg:text-4xl opacity-80">{suffix}</span>
       </div>
-      <span className={`text-gray-500 text-sm md:text-base mt-2 font-medium ${inter.className}`}>{label}</span>
+      <span className={`text-gray-500 text-xs md:text-sm uppercase tracking-[0.2em] mt-3 font-bold ${inter.className} text-center`}>
+        {label}
+      </span>
     </div>
   );
 };
 
+// --- VARIANTS ---
 const slideVariants: Variants = {
-  enter: (direction: number) => ({ opacity: 0, scale: 1.05, zIndex: 1 }),
+  enter: (direction: number) => ({ opacity: 0, scale: 1.15, zIndex: 1 }),
   center: {
     opacity: 1,
     scale: 1,
     zIndex: 1,
     transition: {
-      opacity: { duration: 0.5, ease: "easeInOut" },
-      scale: { duration: 0.5, ease: "easeInOut" },
+      opacity: { duration: 0.7, ease: "easeInOut" },
+      scale: { duration: 8, ease: "linear" }, 
     },
   },
   exit: (direction: number) => ({
     opacity: 0,
     zIndex: 0,
-    transition: { opacity: { duration: 0.5, ease: "easeInOut" } },
+    transition: { opacity: { duration: 0.7, ease: "easeInOut" } },
   }),
 };
 
@@ -135,39 +106,32 @@ const textContainerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    transition: { staggerChildren: 0.1, delayChildren: 0.3 },
   },
 };
 
 const textItemVariants: Variants = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 100, damping: 15 },
+    transition: { type: "spring", stiffness: 80, damping: 15 },
   },
 };
 
+// --- MAPPER ---
 const mapToCarouselItem = (p: any) => {
-  // Detectar badges
   let displayBadges = p.certificaciones || [];
-  if (p.ecoBadge === "bajo_impacto" || p.ecoBadge === "medio_impacto") {
-    displayBadges = [
-      p.ecoBadge.replace("_", " ").toUpperCase(),
-      ...displayBadges,
-    ];
+  if (p.ecoBadge?.includes("impacto")) {
+    displayBadges = [p.ecoBadge.replace("_", " ").toUpperCase(), ...displayBadges];
   }
-  // Limitar a 3 badges para que no rompa el diseño
   displayBadges = displayBadges.slice(0, 3);
 
-  // Fallback de imagen si ibb.co falla o viene null
-  const safeImage =
-    p.imagenUrl && p.imagenUrl.startsWith("http")
+  const safeImage = p.imagenUrl?.startsWith("http")
       ? p.imagenUrl
-      : "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?auto=format&fit=crop&w=800";
+      : "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?auto=format&fit=crop&w=1600&q=90";
 
   return {
-    // Datos visuales para el carrusel
     display: {
       id: p.productoId,
       brand: p.nombreMarca || "EcoShop",
@@ -178,13 +142,12 @@ const mapToCarouselItem = (p: any) => {
       badges: displayBadges,
       image: safeImage,
     },
-    // Objeto completo para el carrito
     originalProduct: {
       id: p.productoId,
       nombre: p.nombre,
       marca: p.nombreMarca || "EcoShop",
       precio: p.precio,
-      categoria: "Varios", 
+      categoria: "Varios",
       impactoAmbiental: {
         huellaCarbono: `${p.huellaCarbonoTotal || 0} kg CO₂`,
         materialesReciclables: p.porcentajeReciclable > 0,
@@ -196,7 +159,7 @@ const mapToCarouselItem = (p: any) => {
   };
 };
 
-// --- COMPONENTE PRINCIPAL ---
+// --- MAIN COMPONENT ---
 export function LowImpactCarousel() {
   const { addToCart } = useCart();
   const { openProductModal } = useUI();
@@ -205,47 +168,32 @@ export function LowImpactCarousel() {
   const [[currentIndex, direction], setCurrentIndex] = useState([0, 0]);
   const [isPaused, setIsPaused] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // ✅ ESTADO DE CARGA 
   const [loading, setLoading] = useState(true);
 
-  // --- CARGA DE DATOS ---
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true); // Iniciamos carga
+      setLoading(true);
       try {
-        const data: any = await api.products.getAll(1, 6, { impacto: "low" });
+        const data: any = await api.products.getAll(1, 5, { impacto: "low" });
         const content = data?.productos || [];
-
         if (content.length > 0) {
-          const mapped = content.map(mapToCarouselItem);
-          setProducts(mapped);
+          setProducts(content.map(mapToCarouselItem));
         }
       } catch (e) {
-        console.error("Error cargando carrusel:", e);
+        console.error("Error carousel:", e);
       } finally {
-        setLoading(false); // Terminamos carga 
+        setLoading(false);
       }
     };
     fetchProducts();
   }, []);
 
-  // Lógica del Carrusel
-  const getIndex = useCallback(
-    (index: number) => {
-      return products.length > 0
-        ? (index + products.length) % products.length
-        : 0;
-    },
-    [products.length]
-  );
-
-  const paginate = useCallback(
-    (newDirection: number) => {
-      setCurrentIndex([getIndex(currentIndex + newDirection), newDirection]);
-    },
-    [currentIndex, getIndex]
-  );
+  const paginate = useCallback((newDirection: number) => {
+    setCurrentIndex(prev => {
+      const nextIndex = (prev[0] + newDirection + products.length) % products.length;
+      return [nextIndex, newDirection];
+    });
+  }, [products.length]);
 
   const goToSlide = (index: number) => {
     if (index === currentIndex) return;
@@ -254,10 +202,8 @@ export function LowImpactCarousel() {
 
   useEffect(() => {
     if (isPaused || products.length === 0) return;
-    timeoutRef.current = setTimeout(() => paginate(1), 6000);
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
+    timeoutRef.current = setTimeout(() => paginate(1), 6000); // 6 segundos
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
   }, [currentIndex, isPaused, paginate, products.length]);
 
   const handleDragEnd = (e: any, { offset, velocity }: any) => {
@@ -267,31 +213,23 @@ export function LowImpactCarousel() {
     setIsPaused(false);
   };
 
-  if (loading) {
-     return <CarouselSkeleton />;
-  }
-
+  if (loading) return <CarouselSkeleton />;
   if (products.length === 0) return null;
 
-  const currentItem = products[currentIndex];
-  // Protección extra
-  if (!currentItem) return null;
-
-  const { display, originalProduct } = currentItem;
+  const { display, originalProduct } = products[currentIndex];
 
   return (
-    <section className={`w-full bg-white py-8 md:py-16 overflow-hidden ${inter.variable} ${righteous.variable}`}>
+    <section className={`w-full bg-white py-12 md:py-20 overflow-hidden ${inter.variable} ${righteous.variable}`}>
       <div className="container mx-auto px-4 xl:px-0">
-        {/* HEADER */}
+        
+        {/* HEADER  */}
         <div className="mb-8 md:mb-12 flex flex-col md:flex-row gap-4 md:gap-10 items-start md:pl-10">
           <div className="flex items-center pt-2 gap-2 shrink-0">
             {[...Array(9)].map((_, i) => (
               <div
                 key={i}
                 className="h-[20px] w-[20px] md:h-[25px] md:w-[25px] rounded-full"
-                style={{
-                  backgroundColor: `rgba(15, 131, 84, ${0.1 + i * 0.11})`,
-                }}
+                style={{ backgroundColor: `rgba(15, 131, 84, ${0.1 + i * 0.11})` }}
               />
             ))}
           </div>
@@ -305,9 +243,9 @@ export function LowImpactCarousel() {
           </div>
         </div>
 
-        {/* CAROUSEL */}
+   
         <div
-          className="relative w-full h-[500px] md:h-[550px] lg:h-[560px] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] group/carousel bg-gray-900"
+          className="relative w-full h-[720px] md:h-[600px] rounded-[32px] md:rounded-[40px] overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] group/carousel bg-gray-900 border border-gray-100/10"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={() => setIsPaused(true)}
@@ -322,7 +260,7 @@ export function LowImpactCarousel() {
               exit="exit"
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.7}
+              dragElastic={0.8}
               onDragEnd={handleDragEnd}
               className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing will-change-transform"
             >
@@ -332,83 +270,85 @@ export function LowImpactCarousel() {
                 fill
                 className="object-cover"
                 priority={true}
-                sizes="(max-width: 768px) 100vw, 85vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 95vw, 1600px"
                 unoptimized={display.image.includes("ibb.co")}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-90" />
-
-              <div className="absolute inset-0 flex flex-col justify-end pointer-events-none pb-14 md:pb-20 lg:pb-16 px-6 md:px-12 lg:px-28">
+              
+              {/* GRADIENTS  */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90 md:opacity-80" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent opacity-60 md:opacity-40" />
+              
+              {/* CONTENT OVERLAY */}
+              <div className="absolute inset-0 flex flex-col justify-end pointer-events-none pb-12 px-6 md:pb-14 md:px-12 lg:pb-16 lg:px-20">
                 <motion.div
-                  className="max-w-4xl space-y-4 md:space-y-6 pointer-events-auto"
+                  className="w-full md:max-w-3xl lg:max-w-4xl space-y-4 pointer-events-auto"
                   variants={textContainerVariants}
                   initial="hidden"
                   animate="show"
                   key={`text-${currentIndex}`}
                 >
                   {/* TAGS */}
-                  <motion.div
-                    variants={textItemVariants}
-                    className="flex flex-wrap items-center gap-2 md:gap-3"
-                  >
-                    <span className="inline-block bg-[#0F8354] text-white px-3 py-1 rounded-full font-bold text-xs md:text-sm tracking-wider shadow-sm">
-                      {display.co2}
+                  <motion.div variants={textItemVariants} className="flex flex-wrap items-center gap-3">
+                    <span className="inline-flex items-center bg-[#0F8354] text-white px-3 py-1 rounded-full font-bold text-[11px] md:text-xs uppercase tracking-wider shadow-lg shadow-[#0F8354]/20 backdrop-blur-md">
+                      {display.co2} Ahorrado
                     </span>
-                    <span className="text-gray-300 text-xs md:text-sm uppercase tracking-[0.2em] font-bold drop-shadow-sm font-sans">
+                    <span className="text-white/80 text-[11px] md:text-xs uppercase tracking-[0.25em] font-bold drop-shadow-md font-sans border-l border-white/30 pl-3">
                       {display.brand}
                     </span>
                   </motion.div>
 
-                  {/* TITLE & DESC */}
-                  <motion.h2
-                    variants={textItemVariants}
-                    className="font-righteous text-3xl md:text-4xl lg:text-6xl text-white leading-[1.1] drop-shadow-xl text-balance"
-                  >
-                    {display.name}
-                  </motion.h2>
-                  <motion.p
-                    variants={textItemVariants}
-                    className="text-gray-200 text-sm md:text-lg lg:text-xl font-sans font-medium leading-relaxed max-w-2xl drop-shadow-md line-clamp-2"
-                  >
-                    {display.description}
-                  </motion.p>
+                  {/* TITLE & DESC 
+                  */}
+                  <div className="space-y-2 md:space-y-3">
+                    <motion.h2
+                      variants={textItemVariants}
+                      className="font-righteous text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] drop-shadow-xl text-balance max-w-full"
+                    >
+                      {display.name}
+                    </motion.h2>
+                    <motion.p
+                      variants={textItemVariants}
+                      className="text-gray-200 text-sm md:text-base lg:text-lg font-sans font-medium leading-relaxed max-w-xl md:max-w-2xl drop-shadow-md line-clamp-2 opacity-90"
+                    >
+                      {display.description}
+                    </motion.p>
+                  </div>
 
                   {/* BADGES */}
-                  <motion.div
-                    variants={textItemVariants}
-                    className="flex flex-wrap gap-2 pt-1 md:pt-2"
-                  >
+                  <motion.div variants={textItemVariants} className="flex flex-wrap gap-2">
                     {display.badges.map((badge: string, idx: number) => (
-                      <span
-                        key={idx}
-                        className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-2 py-1 md:px-3 rounded-md text-[10px] md:text-xs uppercase tracking-wider font-semibold shadow-sm font-sans"
-                      >
+                      <span key={idx} className="bg-white/5 backdrop-blur-md border border-white/10 text-white/90 px-3 py-1 rounded-md text-[10px] md:text-xs uppercase tracking-wider font-semibold shadow-sm font-sans hover:bg-white/10 transition-colors cursor-default">
                         {badge}
                       </span>
                     ))}
                   </motion.div>
 
-                  {/* BUTTONS */}
-                  <motion.div
-                    variants={textItemVariants}
-                    className="pt-4 md:pt-6 flex flex-col xl:flex-row xl:items-center gap-4 md:gap-6"
+                  {/* PRICE & BUTTONS */}
+                  <motion.div 
+                    variants={textItemVariants} 
+                    className="pt-4 md:pt-6 flex flex-col lg:flex-row lg:items-end gap-5 lg:gap-8 pb-2"
                   >
-                    <div className="text-4xl md:text-5xl font-righteous text-white drop-shadow-lg">
-                      ${display.price.toLocaleString()}
+                    <div>
+                        <p className="text-gray-400 text-[10px] uppercase tracking-widest font-bold mb-1 ml-1">Precio</p>
+                        <p className="text-4xl md:text-5xl font-righteous text-white drop-shadow-lg leading-none">
+                            ${display.price.toLocaleString()}
+                        </p>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full sm:w-auto">
+
+                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto lg:ml-auto">
                       <Button
                         onClick={() => addToCart(originalProduct)}
-                        className="font-righteous bg-[#0F8354] hover:bg-[#0a633e] text-white h-12 md:h-14 px-8 rounded-xl text-base md:text-lg transition-all duration-300 shadow-lg hover:shadow-[#0F8354]/40 hover:-translate-y-1 flex items-center justify-center gap-2 flex-1 sm:flex-none"
+                        className="h-14 md:h-16 px-6 md:px-10 bg-[#0F8354] hover:bg-[#0a633e] text-white rounded-xl font-righteous text-base md:text-lg shadow-xl hover:shadow-[#0F8354]/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 w-full sm:w-auto"
                       >
-                        <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />{" "}
-                        Añadir al carrito
+                        <ShoppingCart size={20} /> Añadir al carrito
                       </Button>
 
                       <Button
                         onClick={() => openProductModal(originalProduct)}
-                        className="font-righteous bg-white text-black hover:bg-gray-100 h-12 md:h-14 px-8 rounded-xl text-base md:text-lg transition-all duration-300 shadow-lg hover:-translate-y-1 flex items-center justify-center gap-2 flex-1 sm:flex-none"
+                        variant="outline"
+                        className="h-14 md:h-16 px-6 md:px-10 bg-white/5 border-white/20 text-white hover:bg-white hover:text-black hover:border-white rounded-xl font-righteous text-base md:text-lg backdrop-blur-md transition-all duration-300 flex items-center justify-center gap-2 w-full sm:w-auto hover:-translate-y-0.5"
                       >
-                        <Info className="h-4 w-4 md:h-5 md:w-5" /> Ver detalles
+                        <Info size={20} /> Ver Detalles
                       </Button>
                     </div>
                   </motion.div>
@@ -419,42 +359,44 @@ export function LowImpactCarousel() {
           </AnimatePresence>
 
           {/* ARROWS */}
-          <div className="absolute top-1/2 -translate-y-1/2 inset-x-0 flex justify-between p-2 md:p-4 pointer-events-none z-30">
+          <div className="absolute top-1/2 -translate-y-1/2 inset-x-0 flex justify-between px-4 md:px-6 pointer-events-none z-30">
             <button
               onClick={() => paginate(-1)}
-              className="hidden bg-black/20 hover:bg-black/50 backdrop-blur-md text-white p-2 md:p-3 rounded-full transition-all hover:scale-110 pointer-events-auto border lg:block border-white/10"
+              className="hidden md:flex bg-black/20 hover:bg-black/50 backdrop-blur-md text-white p-3 rounded-full transition-all hover:scale-110 pointer-events-auto border border-white/10 group"
             >
-              <ChevronLeft className="h-6 w-6 md:h-8 md:w-8" />
+              <ChevronLeft className="h-6 w-6 group-hover:-translate-x-0.5 transition-transform" />
             </button>
             <button
               onClick={() => paginate(1)}
-              className="hidden bg-black/20 hover:bg-black/50 backdrop-blur-md text-white p-2 md:p-3 rounded-full transition-all hover:scale-110 pointer-events-auto border lg:block border-white/10"
+              className="hidden md:flex bg-black/20 hover:bg-black/50 backdrop-blur-md text-white p-3 rounded-full transition-all hover:scale-110 pointer-events-auto border border-white/10 group"
             >
-              <ChevronRight className="h-6 w-6 md:h-8 md:w-8" />
+              <ChevronRight className="h-6 w-6 group-hover:translate-x-0.5 transition-transform" />
             </button>
+          </div>
+
+          {/* DOTS */}
+          <div className="absolute top-6 right-6 md:top-8 md:right-8 z-30 flex gap-2">
+            {products.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => goToSlide(idx)}
+                className={clsx(
+                  "h-1.5 rounded-full transition-all duration-500 ease-out backdrop-blur-md shadow-sm border border-transparent",
+                  idx === currentIndex
+                    ? "w-8 bg-[#0F8354]"
+                    : "w-2 bg-white/30 hover:bg-white/60 hover:border-white/20"
+                )}
+                aria-label={`Ir a diapositiva ${idx + 1}`}
+              />
+            ))}
           </div>
         </div>
 
-        {/* DOTS */}
-        <div className="flex justify-center gap-3 mt-6 md:mt-8 z-20">
-          {products.map((_, idx) => (
-            <button key={idx} onClick={() => goToSlide(idx)} className={`h-2.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] ${idx === currentIndex ? "bg-[#0F8354] w-8" : "bg-gray-300 w-2.5 hover:bg-[#0F8354]/60"}`} aria-label={`Ir a diapositiva ${idx + 1}`} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 text-center divide-y md:divide-y-0 md:divide-x divide-gray-200/50 border-t border-gray-200/50 pt-8">
-          <AnimatedStat
-            value={products.length}
-            suffix=""
-            label="Productos en catálogo"
-          />
-          <AnimatedStat
-            value={1.8}
-            decimals={1}
-            suffix="kg"
-            label="CO₂ evitado promedio"
-          />
-          <AnimatedStat value={81} suffix="%" label="Materiales reciclables" />
+        {/* --- STATS --- */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 mt-12 md:mt-20 pt-8 border-t border-gray-100">
+          <AnimatedStat value={products.length} suffix="+" label="Productos Curados" />
+          <AnimatedStat value={1.8} decimals={1} suffix="kg" label="CO₂ Evitado (Promedio)" />
+          <AnimatedStat value={100} suffix="%" label="Calidad Garantizada" />
         </div>
       </div>
     </section>

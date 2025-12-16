@@ -6,7 +6,7 @@ import { useUI } from "@/contexts/UIContext"
 
 export default function ReducirSection() {
   const { isSignedIn } = useAuth()
-  const { openAuth, openImpact } = useUI()
+  const { openAuthModal, openImpact } = useUI()
 
   return (
     <section className="bg-[#0F8354] py-20 md:py-32 w-full">
@@ -34,7 +34,7 @@ export default function ReducirSection() {
         ) : (
           <Button
             size="lg"
-            onClick={openAuth}
+            onClick={openAuthModal}
             className="h-auto py-6 px-10 md:px-16 text-xl md:text-2xl bg-white text-[#0F8354] 
             hover:bg-gray-100 hover:text-[#0a633e] hover:-translate-y-1 hover:shadow-2xl
             border-none rounded-none font-righteous font-medium transition-all duration-300"

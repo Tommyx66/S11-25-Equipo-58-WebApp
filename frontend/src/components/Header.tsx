@@ -27,10 +27,9 @@ export default function Header() {
   const { toggleCart, cartItems } = useCart()
   const { isAdmin } = useUserData()
   
+
   const { 
-    isAuthOpen, 
-    openAuth, 
-    closeAuth, 
+    openAuthModal, 
     openImpact 
   } = useUI()
   
@@ -53,10 +52,11 @@ export default function Header() {
 
   return (
     <>
-      <AuthModal open={isAuthOpen} onClose={closeAuth} />
+     
       <ImpactModal />
       <CheckoutModal />
       <ProductDetailModal />
+      
       <header
         className={clsx(
           "sticky top-0 z-40 w-full transition-all duration-300 border-b backdrop-blur-xl",
@@ -155,7 +155,7 @@ export default function Header() {
             {/* BOTÓN INICIAR SESIÓN ( NO LOGUEADO) */}
             <SignedOut>
               <button
-                onClick={openAuth}
+                onClick={openAuthModal} 
                 className="font-righteous text-sm lg:text-base px-4 py-2 border-2 border-blue-600 text-blue-600 
                 dark:text-blue-400 dark:border-blue-400 rounded-lg bg-white dark:bg-slate-900 
                 transition-all duration-200 hover:bg-blue-600 hover:text-white 
@@ -251,7 +251,7 @@ export default function Header() {
             <button
               onClick={() => {
                 setIsMenuOpen(false)
-                openAuth()
+                openAuthModal() 
               }}
               className="font-righteous mt-4 w-full py-4 border-2 border-blue-600 text-blue-600 
               dark:text-blue-400 dark:border-blue-400 rounded-xl bg-white dark:bg-slate-900 
