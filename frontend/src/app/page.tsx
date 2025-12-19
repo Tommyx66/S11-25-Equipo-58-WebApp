@@ -11,9 +11,10 @@ import { SustainabilityMetrics } from '@/components/SustainabilityMetrics'
 import SellosSection from '@/components/SellosSection'
 import ReducirSection from '@/components/ReducirSection'
 import { ShoppingCart } from '@/components/ShoppingCart'
+import StatsSection from "@/components/StatsSection";
+import { LuxuryEffects } from "@/components/ui/LuxuryEffects";
 
 export default function Home() {
-  // Estado inicial de los filtros
   const [filters, setFilters] = useState({
     categoria: 'Todas',
     precioMax: [200000], 
@@ -24,7 +25,6 @@ export default function Home() {
     origen: 'all'
   })
 
-  // ✅ ESTADOS PARA DATOS DINÁMICOS
   const [availableBrands, setAvailableBrands] = useState<string[]>([])
   const [availableMaterials, setAvailableMaterials] = useState<string[]>([])
 
@@ -55,9 +55,11 @@ export default function Home() {
 
   return (
     <main 
-      className="min-h-screen bg-white dark:bg-slate-950 w-full overflow-x-hidden"
+      className="min-h-screen bg-white dark:bg-slate-950 w-full overflow-x-hidden relative" 
       style={{ zoom: '0.85' }} 
     >
+      <LuxuryEffects />
+
       <section id="inicio">
         <HeroLanding />
       </section>
@@ -66,10 +68,11 @@ export default function Home() {
       
       <div>
         <LowImpactCarousel />
+        <StatsSection />  
       </div>
       
-      <div className="container mx-auto px-4 py-8">
-        <section id="productos" className="scroll">
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <section id="productos" className="scroll-mt-24">
            <ProductFilters 
               filters={filters} 
               setFilter={handleSetFilter} 
@@ -84,11 +87,11 @@ export default function Home() {
            />
         </section>
 
-        <section id="aprende" className="scroll">
+        <section id="aprende" className="scroll-mt-24">
            <HuellaSection />
         </section>
 
-        <section id="impacto" className="scroll">
+        <section id="impacto" className="scroll-mt-24">
           <SustainabilityMetrics />
         </section>
       </div>

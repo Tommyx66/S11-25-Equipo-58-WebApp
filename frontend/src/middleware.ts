@@ -1,6 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// Tus rutas protegidas
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/carrito(.*)',
@@ -8,15 +7,10 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) {
-    // 1. Resolvemos la promesa y guardamos el objeto
-    const authObject = await auth();
-    
-    // 2. Verificamos "a mano" si NO hay usuario
-    if (!authObject.userId) {
-      // 3. Si no hay usuario, lo mandamos al login nosotros mismos
-      return authObject.redirectToSignIn();
-    }
+  const authObj = await auth();
+
+  if (isProtectedRoute(req) && !authObj.userId) {
+    return authObj.redirectToSignIn();
   }
 });
 

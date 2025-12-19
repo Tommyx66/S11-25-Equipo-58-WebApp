@@ -9,6 +9,7 @@ import { useUserData } from '@/contexts/UserContext'
 import { useUI } from '@/contexts/UIContext'
 import clsx from 'clsx'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { AuthModal } from './AuthModal'
 import { ImpactModal } from './ImpactModal'
 import { CheckoutModal } from './CheckoutModal'
 import { ProductDetailModal } from './ProductDetailModal'
@@ -51,9 +52,7 @@ export default function Header() {
 
   return (
     <>
-      {/* ❌ ELIMINADO <AuthModal /> 
-          Ya está en UIProvider, no lo pongas aquí o se duplicará.
-      */}
+     
       <ImpactModal />
       <CheckoutModal />
       <ProductDetailModal />
