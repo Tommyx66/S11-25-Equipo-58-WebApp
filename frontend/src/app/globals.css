@@ -192,3 +192,7 @@ html {
 .animate-wave-dot {
   animation: wave-dot 4s ease-in-out infinite;
 }
+
+img {
+  content-visibility: auto;
+}
