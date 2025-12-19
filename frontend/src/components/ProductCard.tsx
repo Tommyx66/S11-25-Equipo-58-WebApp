@@ -24,6 +24,8 @@ function getImpactColor(nivel: string): { bg: string; text: string; label: strin
   return { bg: "#3B82F6", text: "#2563EB", label: "Neutro" }
 }
 
+// --- COMPONENTE ---
+
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart()
   const { openProductModal } = useUI()
