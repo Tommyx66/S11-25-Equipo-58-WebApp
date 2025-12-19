@@ -56,9 +56,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 certificaciones: [],
                 categoria: "",
                 quantity: item.cantidad,
-                // ✅ CORRECCIÓN APLICADA AQUÍ:
-                material: "polyester", // Valor por defecto para pasar el build
-                origen: "international" // Valor por defecto para pasar el build
+                material: "polyester",
+                origen: "international"
               }))
               setCartItems(mappedItems)
             }

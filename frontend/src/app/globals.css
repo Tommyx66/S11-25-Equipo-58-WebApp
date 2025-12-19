@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -126,7 +125,70 @@
   }
 }
 
-
 html {
   scroll-behavior: smooth;
+}
+@keyframes shine-flow {
+  0% {
+    mask-position: 0% 0%;
+    -webkit-mask-position: 0% 0%;
+  }
+  100% {
+    mask-position: 100% 100%;
+    -webkit-mask-position: 100% 100%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.header-tricky-bg {
+  background-image: radial-gradient(#0f8354 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  mask-image: repeating-linear-gradient(
+    -45deg,
+    black 0%,
+    black 10%,
+    transparent 10%,
+    transparent 50%
+  );
+  -webkit-mask-image: repeating-linear-gradient(
+    -45deg,
+    black 0%,
+    black 10%,
+    transparent 10%,
+    transparent 50%
+  );
+  mask-size: 200% 200%;
+  -webkit-mask-size: 200% 200%;
+  animation: shine-flow 20s linear infinite;
+}
+
+.animate-fade-in-slow {
+  animation: fadeIn 2s ease-out forwards;
+}
+
+/* Animación para los puntos del Hero */
+@keyframes wave-dot {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(0.5);
+    background-color: #e0f2eb;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.4);
+    background-color: #0f8354;
+  }
+}
+
+.animate-wave-dot {
+  animation: wave-dot 4s ease-in-out infinite;
 }

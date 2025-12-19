@@ -26,7 +26,6 @@ export function ShoppingCart() {
   } = useCart();
   
   const { isSignedIn } = useAuth();
-  // 1. CORRECCIÓN AQUÍ: Usamos el nombre correcto 'openAuthModal'
   const { openAuthModal, openCheckout } = useUI();
   
   const totalPrice = getTotalPrice();
@@ -133,7 +132,7 @@ export function ShoppingCart() {
                 onClick={() => {
                   closeCart();
                   if (isSignedIn) openCheckout();
-                  else openAuthModal(); // 2. CORRECCIÓN AQUÍ
+                  else openAuthModal();
                 }}
               >
                 {isSignedIn ? "Proceder al Pago" : "Inicia Sesión para Pagar"}
